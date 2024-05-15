@@ -1,0 +1,92 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id             Int             @id @default(autoincrement())
+  email          String          @unique
+  hashedPassword String
+  createdAt      DateTime        @default(now())
+  name           String
+  address        String
+  role           String
+  PurchaseOrder  PurchaseOrder[]
+  Cart           Cart?
+  Reviews        Reviews[]
+}
+
+model Car {
+  id                Int                 @id @default(autoincrement())
+  model             String
+  make              String
+  description       String
+  type              String
+  price             Int
+  img               String
+  year              Int
+  history           Boolean
+  milage            Int
+  quantity          Int
+  reviews           Reviews[]
+  deal              Boolean
+  PurchaseOrderItem PurchaseOrderItem[]
+  CartItem          CartItem[]
+}
+
+model Reviews {
+  reviewId Int      @id @unique @default(autoincrement())
+  review   String
+  rating   Int
+  carId    Int
+  userId   Int
+  time     DateTime
+  car      Car      @relation(fields: [carId], references: [id])
+  user     User     @relation(fields: [userId], references: [id])
+}
+
+model PurchaseOrderItem {
+  PurchaseOrderId Int
+  carId           Int
+  price           Int
+  quantity        Int
+  PurchaseOrder   PurchaseOrder @relation(fields: [PurchaseOrderId], references: [PurchaseOrderId])
+  car             Car           @relation(fields: [carId], references: [id])
+
+  @@id([PurchaseOrderId, carId])
+}
+
+model PurchaseOrder {
+  PurchaseOrderId Int                 @id @unique @default(autoincrement())
+  userId          Int
+  status          String
+  items           PurchaseOrderItem[]
+  User            User                @relation(fields: [userId], references: [id])
+}
+
+model CartItem {
+  userId     Int
+  quantity   Int
+  carId      Int
+  car        Car   @relation(fields: [carId], references: [id])
+  Cart       Cart? @relation(fields: [cartUserId], references: [userId])
+  cartUserId Int?
+
+  @@id([userId, carId])
+}
+
+model Cart {
+  userId   Int        @unique
+  CartIems CartItem[]
+  user     User       @relation(fields: [userId], references: [id])
+}
