@@ -1,6 +1,6 @@
 import { PrismaClient, User } from "@prisma/client";
 import { IAuthRepository } from "../interfaces/IAuthRepository";
-import RegisterUserDTO from "../interfaces/DTOs/RegisterUserDTO";
+import RegisterUserDTO from "../interfaces/DTOs/Authentication/RegisterUserDTO";
 import { injectable } from "inversify";
 
 const prisma = new PrismaClient();
@@ -8,7 +8,7 @@ const prisma = new PrismaClient();
 export class AuthPrismaRepository implements IAuthRepository {
   registerUser = async (user: RegisterUserDTO) => {
     try {
-      return (await prisma.user.create({ data: user })) as User;
+      return (await prisma.user.create({ data: { ...user, role: "user" } })) as User;
     } catch (error) {
       throw error;
     }

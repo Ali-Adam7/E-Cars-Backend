@@ -1,5 +1,5 @@
 import User from "../entities/User";
-import RegisterUserDTO from "./DTOs/RegisterUserDTO";
+import RegisterUserDTO from "./DTOs/Authentication/RegisterUserDTO";
 
 export interface IAuthRepository {
   registerUser(user: RegisterUserDTO): Promise<User>;

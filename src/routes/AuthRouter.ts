@@ -20,10 +20,10 @@ container.bind<ICrypt>(INTERFACE_TYPE.Crypt).to(Crypt);
 container.bind(INTERFACE_TYPE.AuthController).to(AuthController);
 
 const router = express.Router();
-
 const controller = container.get<AuthController>(INTERFACE_TYPE.AuthController);
 
 router.post("/auth/", controller.onRegisterUser.bind(controller));
 router.put("/auth/", controller.onAuthenticateUser.bind(controller));
+router.put("/auth/refresh", controller.onRefreshToken.bind(controller));
 
 export default router;

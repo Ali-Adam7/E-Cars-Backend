@@ -4,5 +4,4 @@ export default interface RegisterUserDTO {
   createdAt: Date;
   name: string;
   address: string;
-  role: string;
 }
