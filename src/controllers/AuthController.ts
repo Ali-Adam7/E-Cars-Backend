@@ -1,9 +1,10 @@
 import { NextFunction, Request, Response } from "express";
 import { inject, injectable } from "inversify";
-import { INTERFACE_TYPE } from "../utils/types";
-import { IAuthInteractor } from "../interfaces/IAuthInteractor";
-import UserDataDTO from "../interfaces/DTOs/Authentication/UserDataDTO";
-import RequestAuthDTO from "../interfaces/DTOs/Authentication/RequestAuthDTO";
+import { IAuthInteractor } from "../interfaces/Authentication/IAuthInteractor";
+import UserDataDTO from "../interfaces/Authentication/UserDataDTO";
+import RequestAuthDTO from "../interfaces/Authentication/RequestAuthDTO";
+import { INTERFACE_TYPE } from "../config/DI";
+import { HttpError } from "http-errors";
 
 @injectable()
 export class AuthController {
@@ -36,10 +37,14 @@ export class AuthController {
     try {
       const { refreshToken } = req.body;
       const accessToken = this.interactor.refreshToken(refreshToken);
-      if (!accessToken) return res.status(401).send({ error: { message: "Refresh Token Expired" } });
       return res.status(200).json(accessToken);
     } catch (error) {
       next(error);
     }
+  }
+
+  onError(e: HttpError, req: Request, res: Response, next: NextFunction) {
+    console.error(e);
+    res.status(e.statusCode).json({ message: e.message });
   }
 }

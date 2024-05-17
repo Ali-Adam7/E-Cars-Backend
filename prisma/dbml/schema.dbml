@@ -1,0 +1,101 @@
+//// ------------------------------------------------------
+//// THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+//// ------------------------------------------------------
+
+Table User {
+  id Int [pk, increment]
+  email String [unique, not null]
+  hashedPassword String [not null]
+  createdAt DateTime [default: `now()`, not null]
+  name String [not null]
+  address String [not null]
+  role String [not null]
+  PurchaseOrder PurchaseOrder [not null]
+  Cart Cart
+  Reviews Review [not null]
+}
+
+Table Car {
+  id Int [pk, increment]
+  model String [not null]
+  make String [not null]
+  description String [not null]
+  type String [not null]
+  price Int [not null]
+  img String [not null]
+  year Int [not null]
+  history Boolean [not null]
+  milage Int [not null]
+  quantity Int [not null]
+  reviews Review [not null]
+  deal Boolean [not null]
+  PurchaseOrderItem PurchaseOrderItem [not null]
+  CartItem CartItem [not null]
+}
+
+Table Review {
+  id Int [pk, increment]
+  review String [not null]
+  rating Int [not null]
+  carId Int [not null]
+  userId Int [not null]
+  time DateTime [not null]
+  car Car [not null]
+  user User [not null]
+}
+
+Table PurchaseOrderItem {
+  PurchaseOrderId Int [not null]
+  carId Int [not null]
+  price Int [not null]
+  quantity Int [not null]
+  PurchaseOrder PurchaseOrder [not null]
+  car Car [not null]
+
+  indexes {
+    (PurchaseOrderId, carId) [pk]
+  }
+}
+
+Table PurchaseOrder {
+  PurchaseOrderId Int [pk, increment]
+  userId Int [not null]
+  status String [not null]
+  items PurchaseOrderItem [not null]
+  User User [not null]
+}
+
+Table CartItem {
+  userId Int [not null]
+  quantity Int [not null]
+  carId Int [not null]
+  car Car [not null]
+  Cart Cart
+  cartUserId Int
+
+  indexes {
+    (userId, carId) [pk]
+  }
+}
+
+Table Cart {
+  userId Int [unique, not null]
+  CartIems CartItem [not null]
+  user User [not null]
+}
+
+Ref: Review.carId > Car.id
+
+Ref: Review.userId > User.id
+
+Ref: PurchaseOrderItem.PurchaseOrderId > PurchaseOrder.PurchaseOrderId
+
+Ref: PurchaseOrderItem.carId > Car.id
+
+Ref: PurchaseOrder.userId > User.id
+
+Ref: CartItem.carId > Car.id
+
+Ref: CartItem.cartUserId > Cart.userId
+
+Ref: Cart.userId - User.id

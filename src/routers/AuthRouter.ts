@@ -1,15 +1,18 @@
 import express from "express";
-import { Container } from "inversify";
-import { INTERFACE_TYPE } from "../utils/types";
-import { IAuthRepository } from "../interfaces/IAuthRepository";
-import { IAuthInteractor } from "../interfaces/IAuthInteractor";
-import { AuthInteractor } from "../interactors/AuthInteractor";
-import { AuthPrismaRepository } from "../repositories/AuthPrismaRepository";
+import { INTERFACE_TYPE } from "../config/DI";
+
 import { AuthController } from "../controllers/AuthController";
-import { IToken } from "../interfaces/IToken";
-import { Token } from "../lib/token";
-import { ICrypt } from "../interfaces/ICrypt";
-import { Crypt } from "../lib/crypt";
+
+import { Container } from "inversify";
+import { Crypt } from "../external_services/crypt";
+import { Token } from "../external_services/token";
+import { AuthInteractor } from "../interactors/AuthInteractor";
+import { IAuthInteractor } from "../interfaces/Authentication/IAuthInteractor";
+import { IAuthRepository } from "../interfaces/Authentication/IAuthRepository";
+import { ICrypt } from "../interfaces/Authentication/ICrypt";
+import { IToken } from "../interfaces/Authentication/IToken";
+import { AuthPrismaRepository } from "../repositories/AuthPrismaRepository";
+import { Middleware } from "../middlewares/Middleware";
 
 const container = new Container();
 
@@ -18,12 +21,14 @@ container.bind<IAuthInteractor>(INTERFACE_TYPE.AuthInteractor).to(AuthInteractor
 container.bind<IToken>(INTERFACE_TYPE.Token).to(Token);
 container.bind<ICrypt>(INTERFACE_TYPE.Crypt).to(Crypt);
 container.bind(INTERFACE_TYPE.AuthController).to(AuthController);
-
+container.bind(INTERFACE_TYPE.Middleware).to(Middleware);
+const middleware = container.get<Middleware>(INTERFACE_TYPE.Middleware);
 const router = express.Router();
 const controller = container.get<AuthController>(INTERFACE_TYPE.AuthController);
 
 router.post("/auth/", controller.onRegisterUser.bind(controller));
 router.put("/auth/", controller.onAuthenticateUser.bind(controller));
 router.put("/auth/refresh", controller.onRefreshToken.bind(controller));
+router.use(controller.onError.bind(controller));
 
 export default router;

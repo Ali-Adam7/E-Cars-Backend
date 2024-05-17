@@ -30,15 +30,15 @@ CREATE TABLE "Car" (
 );
 
 -- CreateTable
-CREATE TABLE "Reviews" (
-    "reviewId" SERIAL NOT NULL,
+CREATE TABLE "Review" (
+    "id" SERIAL NOT NULL,
     "review" TEXT NOT NULL,
     "rating" INTEGER NOT NULL,
     "carId" INTEGER NOT NULL,
     "userId" INTEGER NOT NULL,
     "time" TIMESTAMP(3) NOT NULL,
 
-    CONSTRAINT "Reviews_pkey" PRIMARY KEY ("reviewId")
+    CONSTRAINT "Review_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -79,7 +79,7 @@ CREATE TABLE "Cart" (
 CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Reviews_reviewId_key" ON "Reviews"("reviewId");
+CREATE UNIQUE INDEX "Review_id_key" ON "Review"("id");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "PurchaseOrder_PurchaseOrderId_key" ON "PurchaseOrder"("PurchaseOrderId");
@@ -88,10 +88,10 @@ CREATE UNIQUE INDEX "PurchaseOrder_PurchaseOrderId_key" ON "PurchaseOrder"("Purc
 CREATE UNIQUE INDEX "Cart_userId_key" ON "Cart"("userId");
 
 -- AddForeignKey
-ALTER TABLE "Reviews" ADD CONSTRAINT "Reviews_carId_fkey" FOREIGN KEY ("carId") REFERENCES "Car"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Review" ADD CONSTRAINT "Review_carId_fkey" FOREIGN KEY ("carId") REFERENCES "Car"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Reviews" ADD CONSTRAINT "Reviews_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Review" ADD CONSTRAINT "Review_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "PurchaseOrderItem" ADD CONSTRAINT "PurchaseOrderItem_PurchaseOrderId_fkey" FOREIGN KEY ("PurchaseOrderId") REFERENCES "PurchaseOrder"("PurchaseOrderId") ON DELETE RESTRICT ON UPDATE CASCADE;

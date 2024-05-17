@@ -1,5 +1,5 @@
-import AuthenticatedUserDTO from "./DTOs/Authentication/AuthenticatedUserDTO";
-import UserDataDTO from "./DTOs/Authentication/UserDataDTO";
+import AuthenticatedUserDTO from "./AuthenticatedUserDTO";
+import UserDataDTO from "./UserDataDTO";
 
 export interface IAuthInteractor {
   registerUser(data: UserDataDTO): Promise<AuthenticatedUserDTO>;

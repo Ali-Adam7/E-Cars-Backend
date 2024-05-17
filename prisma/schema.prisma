@@ -8,6 +8,10 @@ generator client {
   provider = "prisma-client-js"
 }
 
+generator dbml {
+  provider = "prisma-dbml-generator"
+}
+
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
@@ -23,7 +27,7 @@ model User {
   role           String
   PurchaseOrder  PurchaseOrder[]
   Cart           Cart?
-  Reviews        Reviews[]
+  Reviews        Review[]
 }
 
 model Car {
@@ -38,21 +42,21 @@ model Car {
   history           Boolean
   milage            Int
   quantity          Int
-  reviews           Reviews[]
+  reviews           Review[]
   deal              Boolean
   PurchaseOrderItem PurchaseOrderItem[]
   CartItem          CartItem[]
 }
 
-model Reviews {
-  reviewId Int      @id @unique @default(autoincrement())
-  review   String
-  rating   Int
-  carId    Int
-  userId   Int
-  time     DateTime
-  car      Car      @relation(fields: [carId], references: [id])
-  user     User     @relation(fields: [userId], references: [id])
+model Review {
+  id     Int      @id @unique @default(autoincrement())
+  review String
+  rating Int
+  carId  Int
+  userId Int
+  time   DateTime
+  car    Car      @relation(fields: [carId], references: [id])
+  user   User     @relation(fields: [userId], references: [id])
 }
 
 model PurchaseOrderItem {
