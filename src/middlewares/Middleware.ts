@@ -9,10 +9,8 @@ import { IToken } from "../modules/Authentication/interfaces/IToken";
 @injectable()
 export class Middleware {
   private token: IToken;
-  private crypt: ICrypt;
   constructor(@inject(INTERFACE_TYPE.Token) token: IToken, @inject(INTERFACE_TYPE.Crypt) crypt: ICrypt) {
     this.token = token;
-    this.crypt = crypt;
   }
   isAdmin(req: Request, res: Response, next: NextFunction) {
     try {

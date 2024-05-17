@@ -43,7 +43,7 @@ export class AuthController {
     }
   }
 
-  onError(e: HttpError, req: Request, res: Response, next: NextFunction) {
+  onError(e: HttpError, req: Request, res: Response) {
     console.error(e);
     res.status(e.statusCode).json({ message: e.message });
   }
