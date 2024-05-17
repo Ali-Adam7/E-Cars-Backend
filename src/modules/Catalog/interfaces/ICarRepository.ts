@@ -1,5 +1,6 @@
-import Car, { Review } from "../../entities/Car";
-import { CarFiltersDTO } from "./CarFiltersDTO";
+import { CarFiltersDTO } from "../DTOs/CarFiltersDTO";
+import Car from "../entities/Car";
+import Review from "../entities/Review";
 
 export interface ICarRepository {
   getCarById(id: number): Promise<Car>;

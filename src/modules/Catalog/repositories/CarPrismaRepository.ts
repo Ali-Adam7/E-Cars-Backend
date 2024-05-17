@@ -1,8 +1,9 @@
 import { injectable } from "inversify";
-import prisma from "../external_services/prismClient";
-import { ICarRepository } from "../interfaces/Catalog/ICarRepository";
-import Car, { Review } from "../entities/Car";
-import { CarFiltersDTO } from "../interfaces/Catalog/CarFiltersDTO";
+import Car from "../entities/Car";
+import { CarFiltersDTO } from "../DTOs/CarFiltersDTO";
+import { ICarRepository } from "../interfaces/ICarRepository";
+import prisma from "../../../third-party/prismClient"
+import Review from "../entities/Review";
 @injectable()
 export class CarPrismaRepository implements ICarRepository {
   async getAllCars(): Promise<Car[]> {
@@ -80,7 +81,7 @@ export class CarPrismaRepository implements ICarRepository {
         select: { make: true },
         distinct: ["make"],
       });
-      return makes.map((make) => make.make);
+      return makes.map((make: { make: string; }) => make.make);
     } catch (e) {
       throw e;
     }

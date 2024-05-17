@@ -1,9 +1,10 @@
 import { injectable } from "inversify";
 import jwt from "jsonwebtoken";
 import { refreshTokenKey, accessTokenKey } from "../config/config";
-import AuthenticatedUserDTO from "../interfaces/Authentication/AuthenticatedUserDTO";
-import { IToken } from "../interfaces/Authentication/IToken";
+
 import createError from "http-errors";
+import AuthenticatedUserDTO from "../modules/Authentication/DTOs/AuthenticatedUserDTO";
+import { IToken } from "../modules/Authentication/interfaces/IToken";
 
 @injectable()
 export class Token implements IToken {

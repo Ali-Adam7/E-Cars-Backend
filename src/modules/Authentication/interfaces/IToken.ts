@@ -1,4 +1,4 @@
-import AuthenticatedUserDTO from "./AuthenticatedUserDTO";
+import AuthenticatedUserDTO from "../DTOs/AuthenticatedUserDTO";
 
 export interface IToken {
   sign(data: any): { accessToken: string; refreshToken: string };

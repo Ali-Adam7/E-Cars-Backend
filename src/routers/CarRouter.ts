@@ -1,17 +1,16 @@
 import express from "express";
-import { INTERFACE_TYPE } from "../config/DI";
-
-import { CarController } from "../controllers/CarController";
 import { Container } from "inversify";
-import { CarInteractor } from "../interactors/CarInteractor";
-import { ICarInteractor } from "../interfaces/Catalog/ICarInteractor";
-import { ICarRepository } from "../interfaces/Catalog/ICarRepository";
-import { CarPrismaRepository } from "../repositories/CarPrismaRepository";
+import { INTERFACE_TYPE } from "../config/DI";
 import { Middleware } from "../middlewares/Middleware";
-import { Crypt } from "../external_services/crypt";
-import { Token } from "../external_services/token";
-import { ICrypt } from "../interfaces/Authentication/ICrypt";
-import { IToken } from "../interfaces/Authentication/IToken";
+import { ICrypt } from "../modules/Authentication/interfaces/ICrypt";
+import { IToken } from "../modules/Authentication/interfaces/IToken";
+import { CarController } from "../modules/Catalog/controller/CarController";
+import { CarInteractor } from "../modules/Catalog/interactors/CarInteractor";
+import { ICarInteractor } from "../modules/Catalog/interfaces/ICarInteractor";
+import { ICarRepository } from "../modules/Catalog/interfaces/ICarRepository";
+import { CarPrismaRepository } from "../modules/Catalog/repositories/CarPrismaRepository";
+import { Crypt } from "../third-party/crypt";
+import { Token } from "../third-party/token";
 
 const container = new Container();
 container.bind<ICarRepository>(INTERFACE_TYPE.CarRepository).to(CarPrismaRepository);

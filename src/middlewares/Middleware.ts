@@ -1,9 +1,10 @@
 import { inject, injectable } from "inversify";
-import { IToken } from "../interfaces/Authentication/IToken";
-import { ICrypt } from "../interfaces/Authentication/ICrypt";
+
 import { INTERFACE_TYPE } from "../config/DI";
 import { NextFunction, Request, Response } from "express";
 import createError from "http-errors";
+import { ICrypt } from "../modules/Authentication/interfaces/ICrypt";
+import { IToken } from "../modules/Authentication/interfaces/IToken";
 
 @injectable()
 export class Middleware {

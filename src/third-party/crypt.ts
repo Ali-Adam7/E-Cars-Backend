@@ -1,5 +1,5 @@
 import { injectable } from "inversify";
-import { ICrypt } from "../interfaces/Authentication/ICrypt";
+import { ICrypt } from "../modules/Authentication/interfaces/ICrypt";
 const bcrypt = require("bcrypt");
 
 @injectable()

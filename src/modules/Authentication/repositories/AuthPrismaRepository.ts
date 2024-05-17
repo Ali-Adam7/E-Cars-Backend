@@ -1,8 +1,8 @@
-import { User } from "@prisma/client";
 import { injectable } from "inversify";
-import { IAuthRepository } from "../interfaces/Authentication/IAuthRepository";
-import RegisterUserDTO from "../interfaces/Authentication/RegisterUserDTO";
-import prisma from "../external_services/prismClient";
+import User from "../entities/User";
+import { IAuthRepository } from "../interfaces/IAuthRepository";
+import RegisterUserDTO from "../DTOs/RegisterUserDTO";
+import prisma from "../../../third-party/prismClient"
 @injectable()
 export class AuthPrismaRepository implements IAuthRepository {
   registerUser = async (user: RegisterUserDTO) => {

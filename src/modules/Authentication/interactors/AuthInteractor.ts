@@ -1,13 +1,13 @@
 import { inject, injectable } from "inversify";
-import { INTERFACE_TYPE } from "../config/DI";
-import { IAuthRepository } from "../interfaces/Authentication/IAuthRepository";
-import AuthenticatedUserDTO from "../interfaces/Authentication/AuthenticatedUserDTO";
-import { IAuthInteractor } from "../interfaces/Authentication/IAuthInteractor";
-import { ICrypt } from "../interfaces/Authentication/ICrypt";
-import { IToken } from "../interfaces/Authentication/IToken";
-import RegisterUserDTO from "../interfaces/Authentication/RegisterUserDTO";
-import UserDataDTO from "../interfaces/Authentication/UserDataDTO";
+import { IAuthRepository } from "../interfaces/IAuthRepository";
+import AuthenticatedUserDTO from "../DTOs/AuthenticatedUserDTO";
+import { IAuthInteractor } from "../interfaces/IAuthInteractor";
+import { ICrypt } from "../interfaces/ICrypt";
+import { IToken } from "../interfaces/IToken";
+import RegisterUserDTO from "../DTOs/RegisterUserDTO";
+import UserDataDTO from "../DTOs/UserDataDTO";
 import createError from "http-errors";
+import { INTERFACE_TYPE } from "../../../config/DI";
 
 @injectable()
 export class AuthInteractor implements IAuthInteractor {

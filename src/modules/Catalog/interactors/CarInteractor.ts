@@ -1,14 +1,11 @@
-import { inject, injectable } from "inversify";
-import { INTERFACE_TYPE } from "../config/DI";
-import AuthenticatedUserDTO from "../interfaces/Authentication/AuthenticatedUserDTO";
-import { ICrypt } from "../interfaces/Authentication/ICrypt";
-import { IToken } from "../interfaces/Authentication/IToken";
-import RegisterUserDTO from "../interfaces/Authentication/RegisterUserDTO";
-import UserDataDTO from "../interfaces/Authentication/UserDataDTO";
-import { ICarInteractor } from "../interfaces/Catalog/ICarInteractor";
-import { ICarRepository } from "../interfaces/Catalog/ICarRepository";
-import Car, { Review } from "../entities/Car";
-import { CarFiltersDTO } from "../interfaces/Catalog/CarFiltersDTO";
+import { injectable, inject } from "inversify";
+import { INTERFACE_TYPE } from "../../../config/DI";
+import { CarFiltersDTO } from "../DTOs/CarFiltersDTO";
+import { ICarInteractor } from "../interfaces/ICarInteractor";
+import { ICarRepository } from "../interfaces/ICarRepository";
+import Car from "../entities/Car";
+import  Review  from "../entities/Review";
+
 
 @injectable()
 export class CarInteractor implements ICarInteractor {
@@ -42,7 +39,7 @@ export class CarInteractor implements ICarInteractor {
       return null;
     }
   }
-  async addCar(car: Omit<Car, "reviews">): Promise<Car | null> {
+  async addCar(car: Omit<Car, "reviews">): Promise<Omit<Car, "reviews"> | null> {
     try {
       return await this.repository.addCar(car);
     } catch (e) {

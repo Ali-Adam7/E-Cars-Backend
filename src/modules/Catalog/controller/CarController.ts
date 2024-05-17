@@ -1,12 +1,10 @@
-import { NextFunction, Request, Response } from "express";
-import { inject, injectable } from "inversify";
-import { IAuthInteractor } from "../interfaces/Authentication/IAuthInteractor";
-import UserDataDTO from "../interfaces/Authentication/UserDataDTO";
-import RequestAuthDTO from "../interfaces/Authentication/RequestAuthDTO";
-import { INTERFACE_TYPE } from "../config/DI";
-import { ICarInteractor } from "../interfaces/Catalog/ICarInteractor";
+import { NextFunction, Request,Response } from "express";
 import { HttpError } from "http-errors";
-import { Review } from "../entities/Car";
+import { injectable, inject } from "inversify";
+import { INTERFACE_TYPE } from "../../../config/DI";
+import { ICarInteractor } from "../interfaces/ICarInteractor";
+import Review from "../entities/Review";
+
 
 @injectable()
 export class CarController {

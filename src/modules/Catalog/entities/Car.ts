@@ -1,3 +1,5 @@
+import Review from "./Review";
+
 export default interface Car {
   id: number;
   model: string;
@@ -14,11 +16,4 @@ export default interface Car {
   reviews?: Review[];
 }
 
-export interface Review {
-  id: number;
-  review: string;
-  rating: number;
-  carId: number;
-  userId: number;
-  time: Date;
-}
+

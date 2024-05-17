@@ -1,10 +1,10 @@
 import { NextFunction, Request, Response } from "express";
 import { inject, injectable } from "inversify";
-import { IAuthInteractor } from "../interfaces/Authentication/IAuthInteractor";
-import UserDataDTO from "../interfaces/Authentication/UserDataDTO";
-import RequestAuthDTO from "../interfaces/Authentication/RequestAuthDTO";
-import { INTERFACE_TYPE } from "../config/DI";
+import { IAuthInteractor } from "../interfaces/IAuthInteractor";
+import UserDataDTO from "../DTOs/UserDataDTO";
+import RequestAuthDTO from "../DTOs/RequestAuthDTO";
 import { HttpError } from "http-errors";
+import { INTERFACE_TYPE } from "../../../config/DI";
 
 @injectable()
 export class AuthController {

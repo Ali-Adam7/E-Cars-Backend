@@ -1,18 +1,17 @@
 import express from "express";
-import { INTERFACE_TYPE } from "../config/DI";
-
-import { AuthController } from "../controllers/AuthController";
-
 import { Container } from "inversify";
-import { Crypt } from "../external_services/crypt";
-import { Token } from "../external_services/token";
-import { AuthInteractor } from "../interactors/AuthInteractor";
-import { IAuthInteractor } from "../interfaces/Authentication/IAuthInteractor";
-import { IAuthRepository } from "../interfaces/Authentication/IAuthRepository";
-import { ICrypt } from "../interfaces/Authentication/ICrypt";
-import { IToken } from "../interfaces/Authentication/IToken";
-import { AuthPrismaRepository } from "../repositories/AuthPrismaRepository";
+import { INTERFACE_TYPE } from "../config/DI";
 import { Middleware } from "../middlewares/Middleware";
+import { AuthController } from "../modules/Authentication/controller/AuthController";
+import { AuthInteractor } from "../modules/Authentication/interactors/AuthInteractor";
+import { IAuthInteractor } from "../modules/Authentication/interfaces/IAuthInteractor";
+import { IAuthRepository } from "../modules/Authentication/interfaces/IAuthRepository";
+import { ICrypt } from "../modules/Authentication/interfaces/ICrypt";
+import { IToken } from "../modules/Authentication/interfaces/IToken";
+import { AuthPrismaRepository } from "../modules/Authentication/repositories/AuthPrismaRepository";
+import { Crypt } from "../third-party/crypt";
+import { Token } from "../third-party/token";
+
 
 const container = new Container();
 
