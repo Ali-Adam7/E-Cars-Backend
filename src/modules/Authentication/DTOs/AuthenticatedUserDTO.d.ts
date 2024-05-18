@@ -8,4 +8,5 @@ export default interface AuthenticatedUserDTO {
   refreshToken: string;
   iat?: number;
   exp?: number;
+  hashedPassword: string;
 }

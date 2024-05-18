@@ -2,7 +2,7 @@
   "compilerOptions": {
     "target": "es6",
     "lib": ["es6"],
-    "types": ["reflect-metadata"],
+    "types": ["jest", "node", "reflect-metadata"],
     "module": "commonjs",
     "rootDir": "./src",
     "outDir": "./dist",
@@ -18,4 +18,5 @@
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules"]
+
 }

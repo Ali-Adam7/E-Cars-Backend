@@ -17,7 +17,7 @@ export class AuthController {
   async onRegisterUser(req: Request, res: Response, next: NextFunction) {
     try {
       const userData = req.body as UserDataDTO;
-      const AuthenticatedUser = await this.interactor.registerUser(userData);
+      const { hashedPassword, ...AuthenticatedUser } = await this.interactor.registerUser(userData);
       return res.status(200).json(AuthenticatedUser);
     } catch (error) {
       next(error);
@@ -26,6 +26,7 @@ export class AuthController {
   async onAuthenticateUser(req: Request, res: Response, next: NextFunction) {
     try {
       const { email, plainTextPassword } = req.body as RequestAuthDTO;
+      if (!email || !plainTextPassword) return res.send(400);
       const authenticateUser = await this.interactor.authenticateUser(email, plainTextPassword);
       return res.status(200).json(authenticateUser);
     } catch (error) {
@@ -43,8 +44,15 @@ export class AuthController {
     }
   }
 
-  onError(e: HttpError, req: Request, res: Response) {
-    console.error(e);
+  async onDeleteUser(req: Request, res: Response, next: NextFunction) {
+    try {
+      return res.sendStatus(500);
+    } catch (error) {
+      next(error);
+    }
+  }
+  onError(e: HttpError, req: Request, res: Response, next: NextFunction) {
+    //console.log(e);
     res.status(e.statusCode).json({ message: e.message });
   }
 }
