@@ -39,7 +39,6 @@ model Car {
   price             Int
   img               String
   year              Int
-  history           Boolean
   milage            Int
   quantity          Int
   reviews           Review[]

@@ -1,11 +1,13 @@
 import { injectable, inject } from "inversify";
 import { INTERFACE_TYPE } from "../../../config/DI";
-import { CarFiltersDTO } from "../DTOs/CarFiltersDTO";
+import CarFiltersDTO from "../DTOs/CarFiltersDTO";
 import { ICarInteractor } from "../interfaces/ICarInteractor";
 import { ICarRepository } from "../interfaces/ICarRepository";
 import Car from "../entities/Car";
-import  Review  from "../entities/Review";
-
+import Review from "../entities/Review";
+import CarDataDTO from "../DTOs/CarDataDTO";
+import CarModificationDTO from "../DTOs/CarModificationDTO";
+import createError from "http-errors";
 
 @injectable()
 export class CarInteractor implements ICarInteractor {
@@ -21,53 +23,49 @@ export class CarInteractor implements ICarInteractor {
       return { cars: [], numberOfPages: 0 };
     }
   }
-  async getCarById(id: number): Promise<Car | null> {
+  async getCarById(id: number): Promise<Car> {
     try {
-      return await this.repository.getCarById(id);
+      const car = await this.repository.getCarById(id);
+      if (!car) throw createError(404, "Car not found");
+      return car;
     } catch (e) {
-      console.log(e);
-      return null;
+      throw e;
     }
   }
-  async purchaseCar(id: number, quantity: number): Promise<Car | null> {
+  async purchaseCar(id: number, quantity: number): Promise<Car> {
     try {
       const car = await this.getCarById(id);
       if (car?.quantity) return await this.repository.purchaseCar(id, quantity);
-      return null;
+      else throw Error;
     } catch (e) {
-      console.log(e);
-      return null;
+      throw e;
     }
   }
-  async addCar(car: Omit<Car, "reviews">): Promise<Omit<Car, "reviews"> | null> {
+  async addCar(car: CarDataDTO): Promise<Car> {
     try {
       return await this.repository.addCar(car);
     } catch (e) {
-      console.log(e);
-      return null;
+      throw e;
     }
   }
-  async modifyCar(id: number, car: Omit<Partial<Car>, "reviews" | "id">): Promise<Car | null> {
+  async modifyCar(id: number, car: CarModificationDTO): Promise<Car> {
     try {
       return await this.repository.modifyCar(id, car);
     } catch (e) {
-      console.log(e);
-      return null;
+      throw e;
     }
   }
-  async deleteCar(id: number): Promise<Car | null> {
+  async deleteCar(id: number): Promise<Car> {
     try {
       return await this.repository.deleteCar(id);
     } catch (e) {
-      console.log(e);
-      return null;
+      throw e;
     }
   }
   async getCarsOnSale(): Promise<Car[]> {
     try {
       return await this.repository.getCarsOnSale();
     } catch (error) {
-      console.log(error);
       return [];
     }
   }
@@ -75,16 +73,14 @@ export class CarInteractor implements ICarInteractor {
     try {
       return await this.repository.getCarMakes();
     } catch (e) {
-      console.log(e);
       return [];
     }
   }
-  async postReview(review: Review): Promise<Review | null> {
+  async postReview(review: Review): Promise<Review> {
     try {
       return await this.repository.postReview(review);
-    } catch (error: any) {
-      console.log(error);
-      return null;
+    } catch (e) {
+      throw e;
     }
   }
 }

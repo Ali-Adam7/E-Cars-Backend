@@ -1,11 +1,25 @@
-import { NextFunction, Request,Response } from "express";
-import { HttpError } from "http-errors";
+import { NextFunction, Request, Response } from "express";
 import { injectable, inject } from "inversify";
 import { INTERFACE_TYPE } from "../../../config/DI";
 import { ICarInteractor } from "../interfaces/ICarInteractor";
 import Review from "../entities/Review";
+import CarDataDTO from "../DTOs/CarDataDTO";
+import CarModificationDTO from "../DTOs/CarModificationDTO";
+import CarFiltersDTO from "../DTOs/CarFiltersDTO";
+const createFilter = (queryFilters: any): CarFiltersDTO => {
+  return {
+    page: parseInt(queryFilters.page),
+    ...(queryFilters.make && { make: queryFilters.make?.split(",") }),
+    ...(queryFilters.type && { type: queryFilters.type?.split(",") }),
 
+    ...(queryFilters.yeargt && { yeargt: parseInt(queryFilters.yeargt) }),
+    ...(queryFilters.yearlt && { yearlt: parseInt(queryFilters.yearlt) }),
 
+    ...(queryFilters.milage && { milage: parseInt(queryFilters.milage) }),
+    ...(queryFilters.price && { price: parseInt(queryFilters.price) }),
+    sort: queryFilters.sort ? JSON.parse(queryFilters.sort) : { price: "desc" },
+  };
+};
 @injectable()
 export class CarController {
   private interactor: ICarInteractor;
@@ -16,14 +30,27 @@ export class CarController {
 
   async onGetCarById(req: Request, res: Response, next: NextFunction) {
     try {
-      const carId = parseInt(req.params.id);
-      const car = await this.interactor.getCarById(carId);
+      const carId = req.params.id;
+      if (carId === "sale") {
+        const sale = await this.interactor.getCarsOnSale();
+        return res.status(200).json(sale);
+      }
+      const car = await this.interactor.getCarById(parseInt(carId));
       return res.status(200).json(car);
     } catch (error) {
       next(error);
     }
   }
 
+  async onGetCarsByFilter(req: Request, res: Response, next: NextFunction) {
+    try {
+      const filter = createFilter(req.query);
+      const cars = await this.interactor.getFilteredCars(filter);
+      return res.status(200).json(cars);
+    } catch (error) {
+      next(error);
+    }
+  }
   async onGetCarMakes(req: Request, res: Response, next: NextFunction) {
     try {
       const makes = await this.interactor.getCarMakes();
@@ -42,8 +69,32 @@ export class CarController {
       next(error);
     }
   }
-  onError(e: HttpError, req: Request, res: Response, next: NextFunction) {
-    console.error(e);
-    res.status(e.statusCode).json({ message: e.message });
+  async onDeleteCar(req: Request, res: Response, next: NextFunction) {
+    try {
+      const id = parseInt(req.params.id as string);
+      await this.interactor.deleteCar(id);
+      return res.sendStatus(200);
+    } catch (error) {
+      next(error);
+    }
+  }
+  async onModifyCar(req: Request, res: Response, next: NextFunction) {
+    try {
+      const id = parseInt(req.params.id as string);
+      const modifiedCar = req.body as CarModificationDTO;
+      await this.interactor.modifyCar(id, modifiedCar);
+      return res.sendStatus(200);
+    } catch (error) {
+      next(error);
+    }
+  }
+  async onAddCar(req: Request, res: Response, next: NextFunction) {
+    try {
+      const car = req.body as CarDataDTO;
+      await this.interactor.addCar(car);
+      return res.sendStatus(201);
+    } catch (error) {
+      next(error);
+    }
   }
 }

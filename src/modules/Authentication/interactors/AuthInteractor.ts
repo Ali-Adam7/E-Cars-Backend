@@ -34,6 +34,7 @@ export class AuthInteractor implements IAuthInteractor {
       const { plainTextPassword, ...userData } = user;
       const hashedPassword = await this.crypt.hash(plainTextPassword, 10);
       const registerUser = { ...userData, hashedPassword } as CreateUserDTO;
+
       const createdUser = await this.repository.registerUser(registerUser);
       const { accessToken, refreshToken } = this.token.sign(createdUser);
       const authenticatedUser = { ...createdUser, accessToken, refreshToken } as User;
@@ -45,8 +46,7 @@ export class AuthInteractor implements IAuthInteractor {
   async authenticateUser(email: string, plainTextPassword: string): Promise<User> {
     try {
       const { hashedPassword, ...dbUser } = await this.repository.getUserByEmail(email);
-      if (!dbUser) throw createError(401, "Wrong Credentials");
-
+      if (!hashedPassword) throw createError(401, "Wrong Credentials");
       const validation = await this.crypt.compare(plainTextPassword, hashedPassword);
       if (!validation) throw createError(401, "Wrong Credentials");
       const { accessToken, refreshToken } = this.token.sign(dbUser);

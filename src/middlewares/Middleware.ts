@@ -2,7 +2,7 @@ import { inject, injectable } from "inversify";
 
 import { INTERFACE_TYPE } from "../config/DI";
 import { NextFunction, Request, Response } from "express";
-import createError from "http-errors";
+import createError, { HttpError } from "http-errors";
 import { ICrypt } from "../modules/Authentication/interfaces/ICrypt";
 import { IToken } from "../modules/Authentication/interfaces/IToken";
 
@@ -21,5 +21,8 @@ export class Middleware {
     } catch (e) {
       throw e;
     }
+  }
+  onError(e: HttpError, req: Request, res: Response, next: NextFunction) {
+    res.status(e.statusCode).json({ message: e.message });
   }
 }

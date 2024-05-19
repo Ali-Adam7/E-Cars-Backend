@@ -1,14 +1,16 @@
-export interface CarFiltersDTO {
-  model: string;
-  make: string;
-  type: string;
-  price: string;
-  year: string;
-  history: string;
-  milage: string;
-  deal: string;
-  yeargt: string;
-  yearlt: string;
-  page: string;
-  sort: string;
+import Car from "../entities/Car";
+
+export default interface CarFiltersDTO {
+  model?: string;
+  make?: string[];
+  type?: string[];
+  price?: number;
+  year?: number;
+  history?: boolean;
+  milage?: number;
+  deal?: boolean;
+  yeargt?: number;
+  yearlt?: number;
+  page: number;
+  sort: { [x: string]: "desc" | "asc" };
 }

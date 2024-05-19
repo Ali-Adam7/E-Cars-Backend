@@ -5,10 +5,8 @@ import { container } from "../DIContainer";
 
 const router = express.Router();
 const controller = container.get<AuthController>(INTERFACE_TYPE.AuthController);
-
-router.post("/auth/", controller.onRegisterUser.bind(controller));
-router.put("/auth/", controller.onAuthenticateUser.bind(controller));
-router.patch("/auth/", controller.onRefreshToken.bind(controller));
-router.use(controller.onError.bind(controller));
+router.post("/", controller.onRegisterUser.bind(controller));
+router.put("/", controller.onAuthenticateUser.bind(controller));
+router.patch("/", controller.onRefreshToken.bind(controller));
 
 export default router;

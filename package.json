@@ -7,8 +7,9 @@
     "build": "npx tsc && cp -r src/keys dist/",
     "start": "pm2 start dist/server.js --attach",
     "dev": "nodemon src/server.ts",
-    "test": "NODE_ENV=TEST jest"
-        
+    "test": "NODE_ENV=TEST jest",
+    "prisma":"prisma generate --schema=src/third-party/prisma/schema.prisma",
+    "migrate" :"npx prisma migrate dev --name init --schema=src/third-party/prisma/schema.prisma"
   },
   "repository": {
     "type": "git",

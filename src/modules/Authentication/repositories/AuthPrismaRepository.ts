@@ -1,6 +1,6 @@
 import { injectable } from "inversify";
 import { IAuthRepository } from "../interfaces/IAuthRepository";
-import prisma from "../../../third-party/prismClient";
+import prisma from "../../../third-party/prisma/prismClient";
 import createError from "http-errors";
 import DBUserDTO from "../DTOs/DBUserDTO";
 import CreateUserDTO from "../DTOs/CreateUserDTO";
@@ -19,7 +19,9 @@ export class AuthPrismaRepository implements IAuthRepository {
   };
   getUserByEmail = async (email: string) => {
     try {
-      return (await prisma.user.findUnique({ where: { email: email } })) as DBUserDTO;
+      const user = (await prisma.user.findUnique({ where: { email: email } })) as DBUserDTO;
+      if (!user) throw createError(401, "Wrong Credentials");
+      return user;
     } catch (error) {
       throw error;
     }
@@ -29,7 +31,7 @@ export class AuthPrismaRepository implements IAuthRepository {
     try {
       return (await prisma.user.findUnique({ where: { id: id }, select: { name: true } }))?.name;
     } catch (error) {
-      throw error;
+      throw createError(400, "User not found");
     }
   };
 }

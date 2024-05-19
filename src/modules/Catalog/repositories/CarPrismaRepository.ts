@@ -1,10 +1,20 @@
 import { injectable } from "inversify";
 import Car from "../entities/Car";
-import { CarFiltersDTO } from "../DTOs/CarFiltersDTO";
+import CarFiltersDTO from "../DTOs/CarFiltersDTO";
 import { ICarRepository } from "../interfaces/ICarRepository";
-import prisma from "../../../third-party/prismClient";
+import prisma from "../../../third-party/prisma/prismClient";
 import Review from "../entities/Review";
+import createError from "http-errors";
+import CarDataDTO from "../DTOs/CarDataDTO";
+import CarModificationDTO from "../DTOs/CarModificationDTO";
 
+const createPrismFilters = (queryFilters: CarFiltersDTO) => {
+  const prismaWhereFilter = {
+    ...(queryFilters.make && { make: { in: queryFilters.make } }),
+    ...(queryFilters.type && { type: { in: queryFilters.type } }),
+  };
+  return { ...queryFilters, prismaWhereFilter, sort: queryFilters.sort, page: queryFilters.page };
+};
 @injectable()
 export class CarPrismaRepository implements ICarRepository {
   async getAllCars(): Promise<Car[]> {
@@ -23,12 +33,12 @@ export class CarPrismaRepository implements ICarRepository {
   }
   async getFilteredCars(filters: CarFiltersDTO): Promise<{ cars: Car[]; numberOfPages: number }> {
     try {
-      const { prismaWhereFilter, sort, page } = this.createPrismFilters(filters);
+      const { prismaWhereFilter, sort, page } = createPrismFilters(filters);
       const cars = (await prisma.car.findMany({
         where: prismaWhereFilter,
         take: 3,
-        skip: parseInt(page) * 3,
-        orderBy: JSON.parse(sort),
+        skip: page * 3,
+        orderBy: sort,
       })) as Car[];
       const count = await prisma.car.count({
         where: prismaWhereFilter,
@@ -38,25 +48,31 @@ export class CarPrismaRepository implements ICarRepository {
       throw e;
     }
   }
-  async addCar(car: Omit<Car, "reviews">): Promise<Car> {
+  async addCar(car: CarDataDTO): Promise<Car> {
     try {
       return await prisma.car.create({ data: car });
     } catch (e) {
       throw e;
     }
   }
-  async modifyCar(id: number, car: Omit<Partial<Car>, "id" | "reviews">): Promise<Car> {
+  async modifyCar(id: number, car: CarModificationDTO): Promise<Car> {
     try {
       return await prisma.car.update({ where: { id }, data: car });
-    } catch (e) {
+    } catch (e: any) {
+      if (e.code === "P2025") {
+        throw createError(404, "Car not found");
+      }
       throw e;
     }
   }
   async deleteCar(id: number): Promise<Car> {
     try {
       return await prisma.car.delete({ where: { id } });
-    } catch (error: any) {
-      throw error;
+    } catch (e: any) {
+      if (e.code === "P2025") {
+        throw createError(404, "Car not found");
+      }
+      throw e;
     }
   }
   async purchaseCar(id: number, quantity: number): Promise<Car> {
@@ -93,21 +109,5 @@ export class CarPrismaRepository implements ICarRepository {
     } catch (e) {
       throw e;
     }
-  }
-  createPrismFilters(queryFilters: CarFiltersDTO) {
-    const makeFilter = queryFilters.make?.split(",") as string[];
-    const typeFilter = queryFilters.type?.split(",") as string[];
-    const history = Boolean(parseInt(String(queryFilters.history)));
-    const prismaWhereFilter = {
-      make: { in: makeFilter },
-      type: { in: typeFilter },
-      history: history,
-      ...(queryFilters.yeargt && { yeargt: parseInt(String(queryFilters.year)) }),
-      ...(queryFilters.yearlt && { yearlt: parseInt(String(queryFilters.year)) }),
-
-      ...(queryFilters.milage && { milage: parseInt(String(queryFilters.year)) }),
-      ...(queryFilters.price && { price: parseInt(String(queryFilters.year)) }),
-    };
-    return { prismaWhereFilter, sort: queryFilters.sort, page: queryFilters.page };
   }
 }

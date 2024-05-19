@@ -3,7 +3,6 @@ import { inject, injectable } from "inversify";
 import { IAuthInteractor } from "../interfaces/IAuthInteractor";
 import UserDataDTO from "../DTOs/RegisterUserDTO";
 import RequestAuthDTO from "../DTOs/LoginUserDTO";
-import { HttpError } from "http-errors";
 import { INTERFACE_TYPE } from "../../../config/DI";
 
 @injectable()
@@ -56,9 +55,5 @@ export class AuthController {
     } catch (error) {
       next(error);
     }
-  }
-  onError(e: HttpError, req: Request, res: Response, next: NextFunction) {
-    //console.log(e);
-    res.status(e.statusCode).json({ message: e.message });
   }
 }
