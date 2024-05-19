@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from "express";
 import { inject, injectable } from "inversify";
 import { IAuthInteractor } from "../interfaces/IAuthInteractor";
-import UserDataDTO from "../DTOs/UserDataDTO";
-import RequestAuthDTO from "../DTOs/RequestAuthDTO";
+import UserDataDTO from "../DTOs/RegisterUserDTO";
+import RequestAuthDTO from "../DTOs/LoginUserDTO";
 import { HttpError } from "http-errors";
 import { INTERFACE_TYPE } from "../../../config/DI";
 
@@ -17,8 +17,10 @@ export class AuthController {
   async onRegisterUser(req: Request, res: Response, next: NextFunction) {
     try {
       const userData = req.body as UserDataDTO;
-      const { hashedPassword, ...AuthenticatedUser } = await this.interactor.registerUser(userData);
-      return res.status(200).json(AuthenticatedUser);
+      const { accessToken, refreshToken, ...data } = await this.interactor.registerUser(userData);
+      res.cookie("accessToken", accessToken, { httpOnly: true });
+      res.cookie("refreshToken", refreshToken, { httpOnly: true });
+      return res.status(200).json(data);
     } catch (error) {
       next(error);
     }
@@ -28,7 +30,11 @@ export class AuthController {
       const { email, plainTextPassword } = req.body as RequestAuthDTO;
       if (!email || !plainTextPassword) return res.send(400);
       const authenticateUser = await this.interactor.authenticateUser(email, plainTextPassword);
-      return res.status(200).json(authenticateUser);
+      if (!authenticateUser) return;
+      const { accessToken, refreshToken, ...data } = authenticateUser;
+      res.cookie("accessToken", accessToken, { httpOnly: true });
+      res.cookie("refreshToken", refreshToken, { httpOnly: true });
+      return res.status(200).json(data);
     } catch (error) {
       next(error);
     }
@@ -36,9 +42,9 @@ export class AuthController {
 
   async onRefreshToken(req: Request, res: Response, next: NextFunction) {
     try {
-      const { refreshToken } = req.body;
+      const refreshToken = req.cookies.refreshToken;
       const accessToken = this.interactor.refreshToken(refreshToken);
-      return res.status(200).json(accessToken);
+      return res.cookie("accessToken", accessToken, { httpOnly: true }).sendStatus(200);
     } catch (error) {
       next(error);
     }

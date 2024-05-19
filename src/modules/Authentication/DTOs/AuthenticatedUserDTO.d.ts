@@ -1,12 +1,6 @@
-export default interface AuthenticatedUserDTO {
-  email: string;
-  createdAt: Date;
-  name: string;
-  address: string;
-  role: string;
-  accessToken: string;
-  refreshToken: string;
+import DBUserDTO from "./DBUserDTO";
+
+export default interface AuthenticatedUserDTO extends DBUserDTO {
   iat?: number;
   exp?: number;
-  hashedPassword: string;
 }

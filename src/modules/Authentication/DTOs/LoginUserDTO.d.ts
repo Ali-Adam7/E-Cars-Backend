@@ -1,4 +1,4 @@
-export default interface RequestAuthDTO {
+export default interface LoginUserDTO {
   email: string;
   plainTextPassword: string;
 }

@@ -1,8 +1,9 @@
-import RegisterUserDTO from "../DTOs/RegisterUserDTO";
-import User from "../entities/User";
+import AuthenticatedUserDTO from "../DTOs/AuthenticatedUserDTO";
+import CreateUserDTO from "../DTOs/CreateUserDTO";
+import DBUserDTO from "../DTOs/DBUserDTO";
 
 export interface IAuthRepository {
-  registerUser(user: RegisterUserDTO): Promise<User>;
-  getUserByEmail(email: string): Promise<User>;
-  getUserName(id: number): Promise<User>;
+  registerUser(user: CreateUserDTO): Promise<DBUserDTO>;
+  getUserByEmail(email: string): Promise<AuthenticatedUserDTO>;
+  getUserName(id: number): Promise<string | undefined>;
 }

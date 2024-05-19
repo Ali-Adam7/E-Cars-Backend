@@ -4,8 +4,10 @@ import helmet from "helmet";
 import CarRouter from "./routers/CarRouter";
 import AuthRouter from "./routers/AuthRouter";
 
-const app = express();
+const cookieParser = require("cookie-parser");
 
+const app = express();
+app.use(cookieParser());
 app.use(express.json());
 app.use(helmet());
 app.use(CarRouter);

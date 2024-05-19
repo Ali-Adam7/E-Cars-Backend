@@ -8,7 +8,7 @@ const controller = container.get<AuthController>(INTERFACE_TYPE.AuthController);
 
 router.post("/auth/", controller.onRegisterUser.bind(controller));
 router.put("/auth/", controller.onAuthenticateUser.bind(controller));
-router.delete("/auth/", controller.onRefreshToken.bind(controller));
+router.patch("/auth/", controller.onRefreshToken.bind(controller));
 router.use(controller.onError.bind(controller));
 
 export default router;

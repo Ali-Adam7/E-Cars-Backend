@@ -1,15 +1,15 @@
 import { injectable } from "inversify";
-import User from "../entities/User";
 import { IAuthRepository } from "../interfaces/IAuthRepository";
-import RegisterUserDTO from "../DTOs/RegisterUserDTO";
 import prisma from "../../../third-party/prismClient";
 import createError from "http-errors";
+import DBUserDTO from "../DTOs/DBUserDTO";
+import CreateUserDTO from "../DTOs/CreateUserDTO";
 
 @injectable()
 export class AuthPrismaRepository implements IAuthRepository {
-  registerUser = async (user: RegisterUserDTO) => {
+  registerUser = async (user: CreateUserDTO) => {
     try {
-      return (await prisma.user.create({ data: { ...user, role: "user" } })) as User;
+      return (await prisma.user.create({ data: { ...user, role: "user" } })) as DBUserDTO;
     } catch (error: any) {
       if (error.code === "P2002") {
         throw createError(400, "Email already registered");
@@ -19,7 +19,7 @@ export class AuthPrismaRepository implements IAuthRepository {
   };
   getUserByEmail = async (email: string) => {
     try {
-      return (await prisma.user.findUnique({ where: { email: email } })) as User;
+      return (await prisma.user.findUnique({ where: { email: email } })) as DBUserDTO;
     } catch (error) {
       throw error;
     }
@@ -27,7 +27,7 @@ export class AuthPrismaRepository implements IAuthRepository {
 
   getUserName = async (id: number) => {
     try {
-      return (await prisma.user.findUnique({ where: { id: id }, select: { name: true } })) as User;
+      return (await prisma.user.findUnique({ where: { id: id }, select: { name: true } }))?.name;
     } catch (error) {
       throw error;
     }

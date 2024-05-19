@@ -2,7 +2,7 @@ import { agent as request } from "supertest";
 import app from "../app";
 import bodyParser = require("body-parser");
 import prisma from "../third-party/prismClient";
-import AuthenticatedUserDTO from "../modules/Authentication/DTOs/AuthenticatedUserDTO";
+import AuthenticatedUserDTO from "../modules/Authentication/DTOs/DBUserDTO";
 app.use(bodyParser);
 describe("POST /auth", () => {
   it("Authenticate with wrong credentials", async () => {
