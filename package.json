@@ -4,10 +4,11 @@
   "description": "backend of E-Cars Ecommerce System",
   "main": "index.js",
   "scripts": {
-    "build": "npx tsc",
-    "start": "node dist/server.js",
+    "build": "npx tsc && cp -r src/keys dist/",
+    "start": "pm2 start dist/server.js --attach",
     "dev": "nodemon src/server.ts",
     "test": "NODE_ENV=TEST jest"
+        
   },
   "repository": {
     "type": "git",
