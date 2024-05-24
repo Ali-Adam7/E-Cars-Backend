@@ -6,7 +6,6 @@ export default interface CarFiltersDTO {
   type?: string[];
   price?: number;
   year?: number;
-  history?: boolean;
   milage?: number;
   deal?: boolean;
   yeargt?: number;

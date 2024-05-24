@@ -15,18 +15,30 @@ import { CarController } from "./modules/Catalog/controller/CarController";
 import { CarInteractor } from "./modules/Catalog/interactors/CarInteractor";
 import { ICarInteractor } from "./modules/Catalog/interfaces/ICarInteractor";
 import { CarPrismaRepository } from "./modules/Catalog/repositories/CarPrismaRepository";
+import { ICartRepository } from "./modules/Cart/interfaces/ICartRepository";
+import { CartPrismaRepository } from "./modules/Cart/repositories/CartPrismaRepository";
+import { ICartInteractor } from "./modules/Cart/interfaces/ICartInteractor";
+import { CartInteractor } from "./modules/Cart/interactors/CartInteractor";
+import { CartController } from "./modules/Cart/controller/CartController";
+import "reflect-metadata";
 
-export const container = new Container();
+export const container = new Container({ autoBindInjectable: true });
+
+container.bind<IToken>(INTERFACE_TYPE.Token).to(Token);
+container.bind<ICrypt>(INTERFACE_TYPE.Crypt).to(Crypt);
 
 container.bind<IAuthRepository>(INTERFACE_TYPE.AuthRepository).to(AuthPrismaRepository);
 container.bind<IAuthInteractor>(INTERFACE_TYPE.AuthInteractor).to(AuthInteractor);
 container.bind(INTERFACE_TYPE.AuthController).to(AuthController);
-container.bind<IToken>(INTERFACE_TYPE.Token).to(Token);
-container.bind<ICrypt>(INTERFACE_TYPE.Crypt).to(Crypt);
 
 container.bind<ICarRepository>(INTERFACE_TYPE.CarRepository).to(CarPrismaRepository);
 container.bind<ICarInteractor>(INTERFACE_TYPE.CarInteractor).to(CarInteractor);
 container.bind(INTERFACE_TYPE.CarController).to(CarController);
 
+container.bind<ICartRepository>(INTERFACE_TYPE.CartRepository).to(CartPrismaRepository);
+container.bind<ICartInteractor>(INTERFACE_TYPE.CartInteractor).to(CartInteractor);
+container.bind(INTERFACE_TYPE.CartController).to(CartController);
+
 container.bind(INTERFACE_TYPE.Middleware).to(Middleware);
+
 export const middleware = container.get<Middleware>(INTERFACE_TYPE.Middleware);

@@ -26,8 +26,8 @@ model User {
   address        String
   role           String
   PurchaseOrder  PurchaseOrder[]
-  Cart           Cart?
   Reviews        Review[]
+  CartIems       CartItem[]
 }
 
 model Car {
@@ -54,42 +54,36 @@ model Review {
   carId  Int
   userId Int
   time   DateTime
-  car    Car      @relation(fields: [carId], references: [id])
+  car    Car      @relation(fields: [carId], references: [id], onDelete: Cascade)
   user   User     @relation(fields: [userId], references: [id])
 }
 
 model PurchaseOrderItem {
-  PurchaseOrderId Int
+  purchaseOrderId Int
   carId           Int
   price           Int
   quantity        Int
-  PurchaseOrder   PurchaseOrder @relation(fields: [PurchaseOrderId], references: [PurchaseOrderId])
+  PurchaseOrder   PurchaseOrder @relation(fields: [purchaseOrderId], references: [purchaseOrderId])
   car             Car           @relation(fields: [carId], references: [id])
 
-  @@id([PurchaseOrderId, carId])
+  @@id([purchaseOrderId, carId])
 }
 
 model PurchaseOrder {
-  PurchaseOrderId Int                 @id @unique @default(autoincrement())
+  purchaseOrderId Int                 @id @unique @default(autoincrement())
   userId          Int
+  total           Int?
   status          String
   items           PurchaseOrderItem[]
   User            User                @relation(fields: [userId], references: [id])
 }
 
 model CartItem {
-  userId     Int
-  quantity   Int
-  carId      Int
-  car        Car   @relation(fields: [carId], references: [id])
-  Cart       Cart? @relation(fields: [cartUserId], references: [userId])
-  cartUserId Int?
+  userId   Int
+  quantity Int
+  carId    Int
+  car      Car  @relation(fields: [carId], references: [id], onDelete: Cascade)
+  User     User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@id([userId, carId])
-}
-
-model Cart {
-  userId   Int        @unique
-  CartIems CartItem[]
-  user     User       @relation(fields: [userId], references: [id])
 }

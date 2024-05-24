@@ -6,6 +6,7 @@ import Review from "../entities/Review";
 import CarDataDTO from "../DTOs/CarDataDTO";
 import CarModificationDTO from "../DTOs/CarModificationDTO";
 import CarFiltersDTO from "../DTOs/CarFiltersDTO";
+import ReviewDTO from "../DTOs/ReviewDTO";
 const createFilter = (queryFilters: any): CarFiltersDTO => {
   return {
     page: parseInt(queryFilters.page),
@@ -62,7 +63,9 @@ export class CarController {
 
   async onPostReview(req: Request, res: Response, next: NextFunction) {
     try {
-      const review = req.body as Review;
+      const reviewData = req.body as ReviewDTO;
+      const { time } = reviewData;
+      const review = { ...reviewData, time: new Date(time) } as Review;
       const postedReview = await this.interactor.postReview(review);
       return res.status(201).send(postedReview);
     } catch (error) {
@@ -93,6 +96,16 @@ export class CarController {
       const car = req.body as CarDataDTO;
       await this.interactor.addCar(car);
       return res.sendStatus(201);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async onPurchaseCar(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { carId, quantity } = req.body;
+      await this.interactor.purchaseCar(carId, quantity);
+      return res.sendStatus(202);
     } catch (error) {
       next(error);
     }

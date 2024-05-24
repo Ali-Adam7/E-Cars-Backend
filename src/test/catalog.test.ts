@@ -4,6 +4,7 @@ import prisma from "../third-party/prisma/prismClient";
 import express from "express";
 app.use(express.json());
 const car = {
+  id: 1,
   model: "eVToL",
   make: "XPeng",
   description:
@@ -12,7 +13,6 @@ const car = {
   price: 1000000,
   img: "https://media.npr.org/assets/img/2022/11/02/3_custom-71a63a232a91d5339ea937a57e32bee6c06fa9ee.jpg",
   year: 2024,
-  history: false,
   milage: 0,
   quantity: 1,
   deal: false,
@@ -54,14 +54,9 @@ describe("PUT /catalog", () => {
 
 describe("DELETE /catalog", () => {
   it("delete car", async () => {
-    const carBeforeRes = await request(app).get(`/catalog/cars/?make=${car.make}&page=0`);
-    const carBefore = carBeforeRes.body.cars[0];
-
-    const test1 = await request(app).delete(`/catalog/car/${carBefore.id}`);
+    const test1 = await request(app).delete(`/catalog/car/1`);
     expect(test1.statusCode).toBe(200);
-
-    const carAfter = await request(app).get(`/catalog/car/${carBefore.id}`);
-
+    const carAfter = await request(app).get(`/catalog/car/1`);
     expect(carAfter.statusCode).toBe(404);
   });
 });

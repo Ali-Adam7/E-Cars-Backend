@@ -21,7 +21,6 @@ CREATE TABLE "Car" (
     "price" INTEGER NOT NULL,
     "img" TEXT NOT NULL,
     "year" INTEGER NOT NULL,
-    "history" BOOLEAN NOT NULL,
     "milage" INTEGER NOT NULL,
     "quantity" INTEGER NOT NULL,
     "deal" BOOLEAN NOT NULL,
@@ -43,21 +42,22 @@ CREATE TABLE "Review" (
 
 -- CreateTable
 CREATE TABLE "PurchaseOrderItem" (
-    "PurchaseOrderId" INTEGER NOT NULL,
+    "purchaseOrderId" INTEGER NOT NULL,
     "carId" INTEGER NOT NULL,
     "price" INTEGER NOT NULL,
     "quantity" INTEGER NOT NULL,
 
-    CONSTRAINT "PurchaseOrderItem_pkey" PRIMARY KEY ("PurchaseOrderId","carId")
+    CONSTRAINT "PurchaseOrderItem_pkey" PRIMARY KEY ("purchaseOrderId","carId")
 );
 
 -- CreateTable
 CREATE TABLE "PurchaseOrder" (
-    "PurchaseOrderId" SERIAL NOT NULL,
+    "purchaseOrderId" SERIAL NOT NULL,
     "userId" INTEGER NOT NULL,
+    "total" INTEGER,
     "status" TEXT NOT NULL,
 
-    CONSTRAINT "PurchaseOrder_pkey" PRIMARY KEY ("PurchaseOrderId")
+    CONSTRAINT "PurchaseOrder_pkey" PRIMARY KEY ("purchaseOrderId")
 );
 
 -- CreateTable
@@ -65,14 +65,8 @@ CREATE TABLE "CartItem" (
     "userId" INTEGER NOT NULL,
     "quantity" INTEGER NOT NULL,
     "carId" INTEGER NOT NULL,
-    "cartUserId" INTEGER,
 
     CONSTRAINT "CartItem_pkey" PRIMARY KEY ("userId","carId")
-);
-
--- CreateTable
-CREATE TABLE "Cart" (
-    "userId" INTEGER NOT NULL
 );
 
 -- CreateIndex
@@ -82,19 +76,16 @@ CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 CREATE UNIQUE INDEX "Review_id_key" ON "Review"("id");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "PurchaseOrder_PurchaseOrderId_key" ON "PurchaseOrder"("PurchaseOrderId");
-
--- CreateIndex
-CREATE UNIQUE INDEX "Cart_userId_key" ON "Cart"("userId");
+CREATE UNIQUE INDEX "PurchaseOrder_purchaseOrderId_key" ON "PurchaseOrder"("purchaseOrderId");
 
 -- AddForeignKey
-ALTER TABLE "Review" ADD CONSTRAINT "Review_carId_fkey" FOREIGN KEY ("carId") REFERENCES "Car"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Review" ADD CONSTRAINT "Review_carId_fkey" FOREIGN KEY ("carId") REFERENCES "Car"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Review" ADD CONSTRAINT "Review_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "PurchaseOrderItem" ADD CONSTRAINT "PurchaseOrderItem_PurchaseOrderId_fkey" FOREIGN KEY ("PurchaseOrderId") REFERENCES "PurchaseOrder"("PurchaseOrderId") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "PurchaseOrderItem" ADD CONSTRAINT "PurchaseOrderItem_purchaseOrderId_fkey" FOREIGN KEY ("purchaseOrderId") REFERENCES "PurchaseOrder"("purchaseOrderId") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "PurchaseOrderItem" ADD CONSTRAINT "PurchaseOrderItem_carId_fkey" FOREIGN KEY ("carId") REFERENCES "Car"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -103,10 +94,9 @@ ALTER TABLE "PurchaseOrderItem" ADD CONSTRAINT "PurchaseOrderItem_carId_fkey" FO
 ALTER TABLE "PurchaseOrder" ADD CONSTRAINT "PurchaseOrder_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "CartItem" ADD CONSTRAINT "CartItem_carId_fkey" FOREIGN KEY ("carId") REFERENCES "Car"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "CartItem" ADD CONSTRAINT "CartItem_carId_fkey" FOREIGN KEY ("carId") REFERENCES "Car"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "CartItem" ADD CONSTRAINT "CartItem_cartUserId_fkey" FOREIGN KEY ("cartUserId") REFERENCES "Cart"("userId") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "CartItem" ADD CONSTRAINT "CartItem_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
--- AddForeignKey
-ALTER TABLE "Cart" ADD CONSTRAINT "Cart_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+INSERT INTO "User" ("id","email","hashedPassword","createdAt","name","address","role") VALUES (0,'admin@ecars.sale','$2y$10$A7rYWo9GnhVaGGNmIad2hOBV3xh286aZFsgb38DGT6JshaV4QAPbK', CURRENT_TIMESTAMP, 'admin','admin','admin');

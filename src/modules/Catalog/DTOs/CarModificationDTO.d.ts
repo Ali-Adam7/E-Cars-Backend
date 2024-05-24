@@ -6,7 +6,6 @@ export default interface CarModificationDTO {
   price?: number;
   img?: string;
   year?: number;
-  history?: boolean;
   milage?: number;
   quantity?: number;
   deal?: boolean;

@@ -11,8 +11,8 @@ Table User {
   address String [not null]
   role String [not null]
   PurchaseOrder PurchaseOrder [not null]
-  Cart Cart
   Reviews Review [not null]
+  CartIems CartItem [not null]
 }
 
 Table Car {
@@ -24,7 +24,6 @@ Table Car {
   price Int [not null]
   img String [not null]
   year Int [not null]
-  history Boolean [not null]
   milage Int [not null]
   quantity Int [not null]
   reviews Review [not null]
@@ -45,7 +44,7 @@ Table Review {
 }
 
 Table PurchaseOrderItem {
-  PurchaseOrderId Int [not null]
+  purchaseOrderId Int [not null]
   carId Int [not null]
   price Int [not null]
   quantity Int [not null]
@@ -53,13 +52,14 @@ Table PurchaseOrderItem {
   car Car [not null]
 
   indexes {
-    (PurchaseOrderId, carId) [pk]
+    (purchaseOrderId, carId) [pk]
   }
 }
 
 Table PurchaseOrder {
-  PurchaseOrderId Int [pk, increment]
+  purchaseOrderId Int [pk, increment]
   userId Int [not null]
+  total Int
   status String [not null]
   items PurchaseOrderItem [not null]
   User User [not null]
@@ -70,32 +70,23 @@ Table CartItem {
   quantity Int [not null]
   carId Int [not null]
   car Car [not null]
-  Cart Cart
-  cartUserId Int
+  User User [not null]
 
   indexes {
     (userId, carId) [pk]
   }
 }
 
-Table Cart {
-  userId Int [unique, not null]
-  CartIems CartItem [not null]
-  user User [not null]
-}
-
-Ref: Review.carId > Car.id
+Ref: Review.carId > Car.id [delete: Cascade]
 
 Ref: Review.userId > User.id
 
-Ref: PurchaseOrderItem.PurchaseOrderId > PurchaseOrder.PurchaseOrderId
+Ref: PurchaseOrderItem.purchaseOrderId > PurchaseOrder.purchaseOrderId
 
 Ref: PurchaseOrderItem.carId > Car.id
 
 Ref: PurchaseOrder.userId > User.id
 
-Ref: CartItem.carId > Car.id
+Ref: CartItem.carId > Car.id [delete: Cascade]
 
-Ref: CartItem.cartUserId > Cart.userId
-
-Ref: Cart.userId - User.id
+Ref: CartItem.userId > User.id [delete: Cascade]

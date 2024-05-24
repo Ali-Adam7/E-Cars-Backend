@@ -31,8 +31,8 @@ export class AuthController {
       const authenticateUser = await this.interactor.authenticateUser(email, plainTextPassword);
       if (!authenticateUser) return;
       const { accessToken, refreshToken, ...data } = authenticateUser;
-      res.cookie("accessToken", accessToken, { httpOnly: true });
-      res.cookie("refreshToken", refreshToken, { httpOnly: true });
+      res.cookie("accessToken", accessToken);
+      res.cookie("refreshToken", refreshToken);
       return res.status(200).json(data);
     } catch (error) {
       next(error);

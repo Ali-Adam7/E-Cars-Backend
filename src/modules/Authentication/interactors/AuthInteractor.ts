@@ -7,7 +7,6 @@ import UserDataDTO from "../DTOs/RegisterUserDTO";
 import createError from "http-errors";
 import { INTERFACE_TYPE } from "../../../config/DI";
 import User from "../entities/User";
-import CreateUserDTO from "../DTOs/CreateUserDTO";
 
 @injectable()
 export class AuthInteractor implements IAuthInteractor {
@@ -29,15 +28,17 @@ export class AuthInteractor implements IAuthInteractor {
   refreshToken(token: string): string {
     return this.token.refresh(token);
   }
-  async registerUser(user: UserDataDTO): Promise<User> {
+  async registerUser(data: UserDataDTO): Promise<User> {
     try {
+      const user = { ...data, role: "user" };
       const { plainTextPassword, ...userData } = user;
+
       const hashedPassword = await this.crypt.hash(plainTextPassword, 10);
-      const registerUser = { ...userData, hashedPassword } as CreateUserDTO;
+      const registerUser = { ...userData, hashedPassword };
 
       const createdUser = await this.repository.registerUser(registerUser);
       const { accessToken, refreshToken } = this.token.sign(createdUser);
-      const authenticatedUser = { ...createdUser, accessToken, refreshToken } as User;
+      const authenticatedUser = { ...createdUser, accessToken, refreshToken };
       return authenticatedUser;
     } catch (e) {
       throw e;

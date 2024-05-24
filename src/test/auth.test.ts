@@ -18,7 +18,6 @@ describe("POST /auth", () => {
 describe("POST /auth", () => {
   it("Register user", async () => {
     await prisma.user.deleteMany({});
-
     const registercredentials = {
       email: "correctEmail",
       plainTextPassword: "correctPassword",

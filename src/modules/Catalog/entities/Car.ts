@@ -9,11 +9,8 @@ export default interface Car {
   price: number;
   img: string;
   year: number;
-  history: boolean;
   milage: number;
   quantity: number;
   deal: boolean;
   reviews?: Review[];
 }
-
-

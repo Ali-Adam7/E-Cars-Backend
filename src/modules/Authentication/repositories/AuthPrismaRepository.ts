@@ -2,14 +2,13 @@ import { injectable } from "inversify";
 import { IAuthRepository } from "../interfaces/IAuthRepository";
 import prisma from "../../../third-party/prisma/prismClient";
 import createError from "http-errors";
-import DBUserDTO from "../DTOs/DBUserDTO";
 import CreateUserDTO from "../DTOs/CreateUserDTO";
 
 @injectable()
 export class AuthPrismaRepository implements IAuthRepository {
   registerUser = async (user: CreateUserDTO) => {
     try {
-      return (await prisma.user.create({ data: { ...user, role: "user" } })) as DBUserDTO;
+      return await prisma.user.create({ data: { ...user, role: "user" } });
     } catch (error: any) {
       if (error.code === "P2002") {
         throw createError(400, "Email already registered");
@@ -19,7 +18,7 @@ export class AuthPrismaRepository implements IAuthRepository {
   };
   getUserByEmail = async (email: string) => {
     try {
-      const user = (await prisma.user.findUnique({ where: { email: email } })) as DBUserDTO;
+      const user = await prisma.user.findUnique({ where: { email: email } });
       if (!user) throw createError(401, "Wrong Credentials");
       return user;
     } catch (error) {

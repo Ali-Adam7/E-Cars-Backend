@@ -16,7 +16,7 @@
 
 
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "src/modules/Cart/repositories/.ts"],
   "exclude": ["node_modules", "src/test"],
  
 

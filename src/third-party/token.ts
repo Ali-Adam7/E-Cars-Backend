@@ -12,8 +12,8 @@ export class Token implements IToken {
     try {
       const data = jwt.verify(token, accessTokenKey) as AuthenticatedUserDTO;
       return data;
-    } catch (e) {
-      throw e;
+    } catch (e: any) {
+      throw createError(401, e.message);
     }
   }
   refresh(refreshToken: string): string {
@@ -23,14 +23,14 @@ export class Token implements IToken {
         throw createError(401, "Refresh Token Expired");
       }
       const { iat, exp, ...data } = verified;
-      const accessToken = jwt.sign(data, accessTokenKey, { expiresIn: "1s", algorithm: "RS256" });
+      const accessToken = jwt.sign(data, accessTokenKey, { expiresIn: "1h", algorithm: "RS256" });
       return accessToken;
-    } catch (e) {
-      throw e;
+    } catch (e: any) {
+      throw createError(401, e.message);
     }
   }
   sign(data: any): { accessToken: string; refreshToken: string } {
-    const accessToken = jwt.sign(data, accessTokenKey, { expiresIn: "1s", algorithm: "RS256" });
+    const accessToken = jwt.sign(data, accessTokenKey, { expiresIn: "1h", algorithm: "RS256" });
     const refreshToken = jwt.sign(data, refreshTokenKey, { expiresIn: "7d", algorithm: "RS256" });
     return { accessToken: accessToken, refreshToken: refreshToken };
   }
@@ -39,7 +39,7 @@ export class Token implements IToken {
       const { role } = this.verify(accessToken) as AuthenticatedUserDTO;
       return role === "admin" ? true : false;
     } catch (e: any) {
-      throw createError(401, e);
+      throw createError(401, e.message);
     }
   }
 }

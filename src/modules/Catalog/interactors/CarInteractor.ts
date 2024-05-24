@@ -25,9 +25,7 @@ export class CarInteractor implements ICarInteractor {
   }
   async getCarById(id: number): Promise<Car> {
     try {
-      const car = await this.repository.getCarById(id);
-      if (!car) throw createError(404, "Car not found");
-      return car;
+      return await this.repository.getCarById(id);
     } catch (e) {
       throw e;
     }
@@ -36,7 +34,7 @@ export class CarInteractor implements ICarInteractor {
     try {
       const car = await this.getCarById(id);
       if (car?.quantity) return await this.repository.purchaseCar(id, quantity);
-      else throw Error;
+      else throw createError(200, "Out of stock");
     } catch (e) {
       throw e;
     }

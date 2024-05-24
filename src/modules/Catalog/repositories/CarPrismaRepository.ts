@@ -26,7 +26,9 @@ export class CarPrismaRepository implements ICarRepository {
   }
   async getCarById(id: number): Promise<Car> {
     try {
-      return (await prisma.car.findUnique({ where: { id }, include: { reviews: true } })) as Car;
+      const car = await prisma.car.findUnique({ where: { id }, include: { reviews: true } });
+      if (!car) throw createError(404, "Car not found");
+      return car;
     } catch (e) {
       throw e;
     }
@@ -34,12 +36,12 @@ export class CarPrismaRepository implements ICarRepository {
   async getFilteredCars(filters: CarFiltersDTO): Promise<{ cars: Car[]; numberOfPages: number }> {
     try {
       const { prismaWhereFilter, sort, page } = createPrismFilters(filters);
-      const cars = (await prisma.car.findMany({
+      const cars = await prisma.car.findMany({
         where: prismaWhereFilter,
         take: 3,
         skip: page * 3,
         orderBy: sort,
-      })) as Car[];
+      });
       const count = await prisma.car.count({
         where: prismaWhereFilter,
       });
