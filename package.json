@@ -18,6 +18,7 @@
   "author": "Ali Adam",
   "license": "ISC",
   "dependencies": {
+    "json5": ">=1.0.2",
     "@babel/traverse": "^7.24.6",
     "@prisma/client": "^5.14.0",
     "bcrypt": "^5.1.1",
@@ -31,6 +32,7 @@
     "reflect-metadata": "^0.2.2"
   },
   "devDependencies": {
+    "json5": ">=1.0.2",
     "@types/cookie-parser": "^1.4.7",
     "@types/express": "^4.17.21",
     "@types/jest": "^29.5.12",
