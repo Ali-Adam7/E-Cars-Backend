@@ -1,7 +1,7 @@
 import { agent as request } from "supertest";
 import app from "../app";
 import prisma from "../third-party/prisma/prismClient";
-import CartItem from "../modules/Cart/entities/CartItem";
+import CartItem from "../entities/CartItem";
 beforeAll(async () => {
   await prisma.car.deleteMany({});
   await prisma.user.deleteMany({});

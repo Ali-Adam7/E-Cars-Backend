@@ -1,7 +1,7 @@
 import express from "express";
 import { INTERFACE_TYPE } from "../config/DI";
-import { CarController } from "../modules/Catalog/controller/CarController";
 import { container, middleware } from "../DIContainer";
+import { CarController } from "../controllers/CarController";
 
 const router = express.Router();
 const controller = container.get<CarController>(INTERFACE_TYPE.CarController);

@@ -2,7 +2,7 @@ import { inject, injectable } from "inversify";
 import { INTERFACE_TYPE } from "../config/DI";
 import { NextFunction, Request, Response } from "express";
 import createError, { HttpError } from "http-errors";
-import { IToken } from "../modules/Authentication/interfaces/IToken";
+import { IToken } from "../interfaces/IToken";
 
 @injectable()
 export class Middleware {

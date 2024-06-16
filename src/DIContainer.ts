@@ -1,28 +1,29 @@
 import { Container } from "inversify";
 import { INTERFACE_TYPE } from "./config/DI";
+import { AuthController } from "./controllers/AuthController";
+import { CarController } from "./controllers/CarController";
+import { CartController } from "./controllers/CartController";
+import { AuthInteractor } from "./interactors/AuthInteractor";
+import { CarInteractor } from "./interactors/CarInteractor";
+import { CartInteractor } from "./interactors/CartInteractor";
+import { IAuthInteractor } from "./interfaces/IAuthInteractor";
+import { IAuthRepository } from "./interfaces/IAuthRepository";
+import { ICarInteractor } from "./interfaces/ICarInteractor";
+import { ICarRepository } from "./interfaces/ICarRepository";
+import { ICartInteractor } from "./interfaces/ICartInteractor";
+import { ICartRepository } from "./interfaces/ICartRepository";
+import { ICrypt } from "./interfaces/ICrypt";
+import { IToken } from "./interfaces/IToken";
 import { Middleware } from "./middlewares/Middleware";
-import { AuthController } from "./modules/Authentication/controller/AuthController";
-import { AuthInteractor } from "./modules/Authentication/interactors/AuthInteractor";
-import { IAuthInteractor } from "./modules/Authentication/interfaces/IAuthInteractor";
-import { IAuthRepository } from "./modules/Authentication/interfaces/IAuthRepository";
-import { ICrypt } from "./modules/Authentication/interfaces/ICrypt";
-import { IToken } from "./modules/Authentication/interfaces/IToken";
-import { AuthPrismaRepository } from "./modules/Authentication/repositories/AuthPrismaRepository";
+import { AuthPrismaRepository } from "./repositories/AuthPrismaRepository";
+import { CarPrismaRepository } from "./repositories/CarPrismaRepository";
+import { CartPrismaRepository } from "./repositories/CartPrismaRepository";
 import { Crypt } from "./third-party/crypt";
 import { Token } from "./third-party/token";
-import { ICarRepository } from "./modules/Catalog/interfaces/ICarRepository";
-import { CarController } from "./modules/Catalog/controller/CarController";
-import { CarInteractor } from "./modules/Catalog/interactors/CarInteractor";
-import { ICarInteractor } from "./modules/Catalog/interfaces/ICarInteractor";
-import { CarPrismaRepository } from "./modules/Catalog/repositories/CarPrismaRepository";
-import { ICartRepository } from "./modules/Cart/interfaces/ICartRepository";
-import { CartPrismaRepository } from "./modules/Cart/repositories/CartPrismaRepository";
-import { ICartInteractor } from "./modules/Cart/interfaces/ICartInteractor";
-import { CartInteractor } from "./modules/Cart/interactors/CartInteractor";
-import { CartController } from "./modules/Cart/controller/CartController";
-import "reflect-metadata";
+import { PurchaseCarEmitter } from "./events/PurchaseCarEmitter";
 
 export const container = new Container({ autoBindInjectable: true });
+container.options.skipBaseClassChecks = true;
 
 container.bind<IToken>(INTERFACE_TYPE.Token).to(Token);
 container.bind<ICrypt>(INTERFACE_TYPE.Crypt).to(Crypt);
@@ -40,5 +41,6 @@ container.bind<ICartInteractor>(INTERFACE_TYPE.CartInteractor).to(CartInteractor
 container.bind(INTERFACE_TYPE.CartController).to(CartController);
 
 container.bind(INTERFACE_TYPE.Middleware).to(Middleware);
+container.bind(INTERFACE_TYPE.PurchaseCarEmitter).to(PurchaseCarEmitter);
 
 export const middleware = container.get<Middleware>(INTERFACE_TYPE.Middleware);

@@ -15,4 +15,5 @@ export const INTERFACE_TYPE = {
   CartController: Symbol.for("CartController"),
 
   Middleware: Symbol.for("Middleware"),
+  PurchaseCarEmitter: Symbol.for("PurchaseEmitter"),
 };

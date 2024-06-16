@@ -1,12 +1,13 @@
 import { NextFunction, Request, Response } from "express";
 import { injectable, inject } from "inversify";
-import { INTERFACE_TYPE } from "../../../config/DI";
 import { ICarInteractor } from "../interfaces/ICarInteractor";
 import Review from "../entities/Review";
 import CarDataDTO from "../DTOs/CarDataDTO";
 import CarModificationDTO from "../DTOs/CarModificationDTO";
 import CarFiltersDTO from "../DTOs/CarFiltersDTO";
 import ReviewDTO from "../DTOs/ReviewDTO";
+import { INTERFACE_TYPE } from "../config/DI";
+
 const createFilter = (queryFilters: any): CarFiltersDTO => {
   return {
     page: parseInt(queryFilters.page),
@@ -24,7 +25,6 @@ const createFilter = (queryFilters: any): CarFiltersDTO => {
 @injectable()
 export class CarController {
   private interactor: ICarInteractor;
-
   constructor(@inject(INTERFACE_TYPE.CarInteractor) interactor: ICarInteractor) {
     this.interactor = interactor;
   }

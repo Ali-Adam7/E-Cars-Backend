@@ -1,4 +1,4 @@
-import Car from "../../Catalog/entities/Car";
+import Car from "./Car";
 
 export default interface CartItem {
   userId: number;

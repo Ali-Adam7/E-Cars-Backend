@@ -3,7 +3,7 @@ import { inject, injectable } from "inversify";
 import { IAuthInteractor } from "../interfaces/IAuthInteractor";
 import UserDataDTO from "../DTOs/RegisterUserDTO";
 import RequestAuthDTO from "../DTOs/LoginUserDTO";
-import { INTERFACE_TYPE } from "../../../config/DI";
+import { INTERFACE_TYPE } from "../config/DI";
 
 @injectable()
 export class AuthController {

@@ -1,7 +1,7 @@
 import express from "express";
 import { INTERFACE_TYPE } from "../config/DI";
 import { container, middleware } from "../DIContainer";
-import { CartController } from "../modules/Cart/controller/CartController";
+import { CartController } from "../controllers/CartController";
 const router = express.Router();
 const controller = container.get<CartController>(INTERFACE_TYPE.CartController);
 

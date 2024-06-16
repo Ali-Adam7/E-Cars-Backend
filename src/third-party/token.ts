@@ -3,8 +3,8 @@ import jwt from "jsonwebtoken";
 import { refreshTokenKey, accessTokenKey } from "../config/config";
 
 import createError from "http-errors";
-import { IToken } from "../modules/Authentication/interfaces/IToken";
-import AuthenticatedUserDTO from "../modules/Authentication/DTOs/AuthenticatedUserDTO";
+import AuthenticatedUserDTO from "../DTOs/AuthenticatedUserDTO";
+import { IToken } from "../interfaces/IToken";
 
 @injectable()
 export class Token implements IToken {

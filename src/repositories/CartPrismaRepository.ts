@@ -1,11 +1,11 @@
 import { injectable } from "inversify";
 import { ICartRepository } from "../interfaces/ICartRepository";
-import prisma from "../../../third-party/prisma/prismClient";
 import CartItem from "../entities/CartItem";
 import CreateOrderDTO from "../DTOs/CreatePurchaseOrderDTO";
 import PurchaseOrder from "../entities/PurchaseOrder";
 import PurchaseOrderOrderItem from "../entities/PurchaseOrderItem";
 import PurchaseOrderItem from "../entities/PurchaseOrderItem";
+import prisma from "../third-party/prisma/prismClient";
 
 @injectable()
 export class CartPrismaRepository implements ICartRepository {

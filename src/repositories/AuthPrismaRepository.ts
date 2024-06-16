@@ -1,8 +1,8 @@
 import { injectable } from "inversify";
 import { IAuthRepository } from "../interfaces/IAuthRepository";
-import prisma from "../../../third-party/prisma/prismClient";
 import createError from "http-errors";
 import CreateUserDTO from "../DTOs/CreateUserDTO";
+import prisma from "../third-party/prisma/prismClient";
 
 @injectable()
 export class AuthPrismaRepository implements IAuthRepository {

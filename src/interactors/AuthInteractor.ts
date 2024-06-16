@@ -5,8 +5,8 @@ import { ICrypt } from "../interfaces/ICrypt";
 import { IToken } from "../interfaces/IToken";
 import UserDataDTO from "../DTOs/RegisterUserDTO";
 import createError from "http-errors";
-import { INTERFACE_TYPE } from "../../../config/DI";
 import User from "../entities/User";
+import { INTERFACE_TYPE } from "../config/DI";
 
 @injectable()
 export class AuthInteractor implements IAuthInteractor {

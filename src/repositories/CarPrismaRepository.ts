@@ -1,12 +1,13 @@
 import { injectable } from "inversify";
-import Car from "../entities/Car";
-import CarFiltersDTO from "../DTOs/CarFiltersDTO";
+
 import { ICarRepository } from "../interfaces/ICarRepository";
-import prisma from "../../../third-party/prisma/prismClient";
-import Review from "../entities/Review";
-import createError from "http-errors";
+import prisma from "../third-party/prisma/prismClient";
 import CarDataDTO from "../DTOs/CarDataDTO";
+import CarFiltersDTO from "../DTOs/CarFiltersDTO";
 import CarModificationDTO from "../DTOs/CarModificationDTO";
+import Car from "../entities/Car";
+import createError from "http-errors";
+import Review from "../entities/Review";
 
 const createPrismFilters = (queryFilters: CarFiltersDTO) => {
   const prismaWhereFilter = {

@@ -1,9 +1,9 @@
 import { NextFunction, Request, Response } from "express";
 
 import { injectable, inject } from "inversify";
-import { INTERFACE_TYPE } from "../../../config/DI";
-import { ICartInteractor } from "../interfaces/ICartInteractor";
 import createError from "http-errors";
+import { ICartInteractor } from "../interfaces/ICartInteractor";
+import { INTERFACE_TYPE } from "../config/DI";
 
 @injectable()
 export class CartController {
@@ -16,7 +16,6 @@ export class CartController {
   async onGetCartById(req: Request, res: Response, next: NextFunction) {
     try {
       const userId = parseInt(req.params.userId);
-      console.log(userId);
       const cart = await this.interactor.getCartById(userId);
       return res.status(200).json(cart);
     } catch (e) {

@@ -1,23 +1,23 @@
 import { injectable, inject } from "inversify";
-import { INTERFACE_TYPE } from "../../../config/DI";
 import { ICartRepository } from "../interfaces/ICartRepository";
 import { ICartInteractor } from "../interfaces/ICartInteractor";
 import createError from "http-errors";
 import CartItem from "../entities/CartItem";
-import { ICarRepository } from "../../Catalog/interfaces/ICarRepository";
 import PurchaseOrder from "../entities/PurchaseOrder";
+import { INTERFACE_TYPE } from "../config/DI";
+import { PurchaseCarEmitter } from "../events/PurchaseCarEmitter";
 
 @injectable()
 export class CartInteractor implements ICartInteractor {
   private repository: ICartRepository;
-  private carRepository: ICarRepository;
+  private purchaseCarEmitter: PurchaseCarEmitter;
 
   constructor(
     @inject(INTERFACE_TYPE.CartRepository) repository: ICartRepository,
-    @inject(INTERFACE_TYPE.CarRepository) carRepository: ICarRepository
+    @inject(INTERFACE_TYPE.PurchaseCarEmitter) purchaseCarEmitter: PurchaseCarEmitter
   ) {
     this.repository = repository;
-    this.carRepository = carRepository;
+    this.purchaseCarEmitter = purchaseCarEmitter;
   }
   async getCartById(userId: number): Promise<CartItem[]> {
     try {
@@ -58,7 +58,8 @@ export class CartInteractor implements ICartInteractor {
       const purchaseOrder = await this.repository.createOrder({ userId: userId, status: "PROCESSING" });
       for (const cartItem of cart) {
         const { quantity, car } = cartItem;
-        await this.carRepository.purchaseCar(car.id, quantity);
+        this.purchaseCarEmitter.emit("Purchase", { carId: car.id, quantity: quantity });
+
         const item = {
           purchaseOrderId: purchaseOrder.purchaseOrderId,
           carId: car.id,

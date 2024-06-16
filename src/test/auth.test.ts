@@ -1,7 +1,7 @@
 import { agent as request } from "supertest";
 import app from "../app";
-import AuthenticatedUserDTO from "../modules/Authentication/DTOs/DBUserDTO";
 import prisma from "../third-party/prisma/prismClient";
+import AuthenticatedUserDTO from "../DTOs/AuthenticatedUserDTO";
 describe("POST /auth", () => {
   it("Authenticate with wrong credentials", async () => {
     await prisma.user.deleteMany({});
