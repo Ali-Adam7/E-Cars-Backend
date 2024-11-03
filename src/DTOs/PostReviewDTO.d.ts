@@ -1,4 +1,4 @@
-export default interface ReviewDTO {
+export default interface PostReviewDTO {
   review: string;
   rating: number;
   carId: number;

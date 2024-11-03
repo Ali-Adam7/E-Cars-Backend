@@ -22,12 +22,10 @@ Table Car {
   description String [not null]
   type String [not null]
   price Int [not null]
-  img String [not null]
   year Int [not null]
   milage Int [not null]
   quantity Int [not null]
   reviews Review [not null]
-  deal Boolean [not null]
   PurchaseOrderItem PurchaseOrderItem [not null]
   CartItem CartItem [not null]
 }

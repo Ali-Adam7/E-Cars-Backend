@@ -5,21 +5,17 @@ import Review from "../entities/Review";
 import CarDataDTO from "../DTOs/CarDataDTO";
 import CarModificationDTO from "../DTOs/CarModificationDTO";
 import CarFiltersDTO from "../DTOs/CarFiltersDTO";
-import ReviewDTO from "../DTOs/ReviewDTO";
+import ReviewDTO from "../DTOs/PostReviewDTO";
 import { INTERFACE_TYPE } from "../config/DI";
 
 const createFilter = (queryFilters: any): CarFiltersDTO => {
   return {
-    page: parseInt(queryFilters.page),
     ...(queryFilters.make && { make: queryFilters.make?.split(",") }),
     ...(queryFilters.type && { type: queryFilters.type?.split(",") }),
-
     ...(queryFilters.yeargt && { yeargt: parseInt(queryFilters.yeargt) }),
     ...(queryFilters.yearlt && { yearlt: parseInt(queryFilters.yearlt) }),
-
     ...(queryFilters.milage && { milage: parseInt(queryFilters.milage) }),
     ...(queryFilters.price && { price: parseInt(queryFilters.price) }),
-    sort: queryFilters.sort ? JSON.parse(queryFilters.sort) : { price: "desc" },
   };
 };
 @injectable()
@@ -32,10 +28,6 @@ export class CarController {
   async onGetCarById(req: Request, res: Response, next: NextFunction) {
     try {
       const carId = req.params.id;
-      if (carId === "sale") {
-        const sale = await this.interactor.getCarsOnSale();
-        return res.status(200).json(sale);
-      }
       const car = await this.interactor.getCarById(parseInt(carId));
       return res.status(200).json(car);
     } catch (error) {
@@ -64,8 +56,7 @@ export class CarController {
   async onPostReview(req: Request, res: Response, next: NextFunction) {
     try {
       const reviewData = req.body as ReviewDTO;
-      const { time } = reviewData;
-      const review = { ...reviewData, time: new Date(time) } as Review;
+      const review = { ...reviewData, time: new Date(), userId: req.user?.id || 0 } as Review;
       const postedReview = await this.interactor.postReview(review);
       return res.status(201).send(postedReview);
     } catch (error) {

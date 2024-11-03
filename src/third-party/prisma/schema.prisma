@@ -37,12 +37,10 @@ model Car {
   description       String
   type              String
   price             Int
-  img               String
   year              Int
   milage            Int
   quantity          Int
   reviews           Review[]
-  deal              Boolean
   PurchaseOrderItem PurchaseOrderItem[]
   CartItem          CartItem[]
 }

@@ -22,8 +22,10 @@ export class CartInteractor implements ICartInteractor {
   async getCartById(userId: number): Promise<CartItem[]> {
     try {
       const cart = await this.repository.getCartById(userId);
-      if (!cart.length) throw createError(404, "No Cart found");
-      return cart;
+      const customerCart = cart.map((item) => {
+        return { ...item.car, quantity: item.quantity };
+      }) as any;
+      return customerCart;
     } catch (e) {
       throw e;
     }
@@ -31,6 +33,13 @@ export class CartInteractor implements ICartInteractor {
   async addCar(userId: number, carId: number, quantity: number): Promise<CartItem> {
     try {
       return await this.repository.addCar(userId, carId, quantity);
+    } catch (e) {
+      throw e;
+    }
+  }
+  async deleteCar(userId: number, carId: number): Promise<void> {
+    try {
+      await this.repository.deleteCar(userId, carId);
     } catch (e) {
       throw e;
     }
@@ -46,7 +55,7 @@ export class CartInteractor implements ICartInteractor {
   async submitOrder(userId: number): Promise<PurchaseOrder> {
     try {
       // get cart
-      const cart: CartItem[] = await this.getCartById(userId);
+      const cart: CartItem[] = await this.repository.getCartById(userId);
 
       // check  quantity for each item
 
@@ -78,7 +87,8 @@ export class CartInteractor implements ICartInteractor {
   }
   async getPastOrders(userId: number): Promise<PurchaseOrder[]> {
     try {
-      return await this.repository.getPastOrders(userId);
+      const orders = await this.repository.getPastOrders(userId);
+      return orders;
     } catch (e) {
       throw e;
     }

@@ -17,12 +17,15 @@ export class CartPrismaRepository implements ICartRepository {
     }
   }
   async addCar(userId: number, carId: number, quantity: number): Promise<CartItem> {
-    console.log(quantity);
     try {
       return await prisma.cartItem.upsert({
         where: { userId_carId: { userId, carId } },
         create: { quantity, User: { connect: { id: userId } }, car: { connect: { id: carId } } },
-        update: { quantity, User: { connect: { id: userId } }, car: { connect: { id: carId } } },
+        update: {
+          quantity: { increment: quantity },
+          User: { connect: { id: userId } },
+          car: { connect: { id: carId } },
+        },
         include: { car: true },
       });
     } catch (e) {
@@ -32,6 +35,22 @@ export class CartPrismaRepository implements ICartRepository {
   async deleteCart(userId: number): Promise<void> {
     try {
       await prisma.cartItem.deleteMany({ where: { userId } });
+    } catch (e) {
+      throw e;
+    }
+  }
+  async deleteCar(userId: number, carId: number): Promise<void> {
+    try {
+      const inventoryItem = await prisma.cartItem.findUnique({
+        where: { userId_carId: { userId, carId } },
+      });
+      if (!inventoryItem) return;
+      if (inventoryItem.quantity > 1)
+        await prisma.cartItem.update({
+          where: { userId_carId: { userId, carId } },
+          data: { quantity: inventoryItem.quantity - 1 },
+        });
+      else await prisma.cartItem.delete({ where: { userId_carId: { userId, carId } } });
     } catch (e) {
       throw e;
     }

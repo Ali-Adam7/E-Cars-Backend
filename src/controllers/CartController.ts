@@ -17,7 +17,7 @@ export class CartController {
     try {
       const userId = parseInt(req.params.userId);
       const cart = await this.interactor.getCartById(userId);
-      return res.status(200).json(cart);
+      return res.json(cart);
     } catch (e) {
       next(e);
     }
@@ -26,7 +26,7 @@ export class CartController {
     const userId = parseInt(req.params.userId);
     const carId = parseInt(req.params.carId);
     const quantity = parseInt(req.body.quantity);
-    if (!quantity || quantity < 1) next(createError(400, "invalid quantity"));
+    if (!quantity || quantity < 1) return next(createError(400, "invalid quantity"));
     try {
       const cartItem = await this.interactor.addCar(userId, carId, quantity);
       return res.status(201).json(cartItem);
@@ -44,11 +44,21 @@ export class CartController {
     }
   }
 
+  async onDeleteCar(req: Request, res: Response, next: NextFunction) {
+    try {
+      const userId = parseInt(req.params.userId);
+      const carId = parseInt(req.params.carId);
+      await this.interactor.deleteCar(userId, carId);
+      return res.sendStatus(202);
+    } catch (e) {
+      next(e);
+    }
+  }
   async onSubmitOrder(req: Request, res: Response, next: NextFunction) {
     try {
       const userId = parseInt(req.params.userId);
-      const order = await this.interactor.submitOrder(userId);
-      return res.json(order);
+      await this.interactor.submitOrder(userId);
+      return res.send("Success");
     } catch (e) {
       next(e);
     }
@@ -56,7 +66,6 @@ export class CartController {
   async onGetPastOrders(req: Request, res: Response, next: NextFunction) {
     try {
       const userId = parseInt(req.params.userId);
-
       const pastOrders = await this.interactor.getPastOrders(userId);
       return res.status(200).json(pastOrders);
     } catch (e) {

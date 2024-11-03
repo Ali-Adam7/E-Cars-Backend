@@ -5,7 +5,8 @@ import { CarController } from "../controllers/CarController";
 
 const router = express.Router();
 const controller = container.get<CarController>(INTERFACE_TYPE.CarController);
-
+const authenticateUser = middleware.authenticateUser.bind(middleware);
+router.use(authenticateUser);
 const isAdmin = middleware.isAdmin.bind(middleware);
 router.get("/makes", controller.onGetCarMakes.bind(controller));
 router.get("/cars/", controller.onGetCarsByFilter.bind(controller));

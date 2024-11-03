@@ -7,10 +7,8 @@ export default interface Car {
   description: string;
   type: string;
   price: number;
-  img: string;
   year: number;
   milage: number;
   quantity: number;
-  deal: boolean;
   reviews?: Review[];
 }

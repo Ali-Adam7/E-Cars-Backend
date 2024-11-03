@@ -10,6 +10,6 @@ export interface ICartRepository {
   submitOrder(PurchaseOrder: PurchaseOrder): Promise<PurchaseOrder>;
   createOrder(userId: CreatePurchaseOrderDTO): Promise<PurchaseOrder>;
   createOrderItem(orderItem: PurchaseOrderItem): Promise<PurchaseOrderItem>;
-
+  deleteCar(userId: number, carId: number): Promise<void>;
   getPastOrders(userId: number): Promise<PurchaseOrder[]>;
 }

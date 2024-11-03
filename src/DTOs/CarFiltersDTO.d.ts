@@ -10,6 +10,4 @@ export default interface CarFiltersDTO {
   deal?: boolean;
   yeargt?: number;
   yearlt?: number;
-  page: number;
-  sort: { [x: string]: "desc" | "asc" };
 }

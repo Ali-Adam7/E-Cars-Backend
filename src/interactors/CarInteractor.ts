@@ -15,11 +15,11 @@ export class CarInteractor implements ICarInteractor {
   constructor(@inject(INTERFACE_TYPE.CarRepository) repository: ICarRepository) {
     this.repository = repository;
   }
-  async getFilteredCars(filters: CarFiltersDTO): Promise<{ cars: Car[]; numberOfPages: number }> {
+  async getFilteredCars(filters: CarFiltersDTO): Promise<Car[]> {
     try {
       return await this.repository.getFilteredCars(filters);
     } catch (e) {
-      return { cars: [], numberOfPages: 0 };
+      return [];
     }
   }
   async getCarById(id: number): Promise<Car> {
@@ -60,13 +60,7 @@ export class CarInteractor implements ICarInteractor {
       throw e;
     }
   }
-  async getCarsOnSale(): Promise<Car[]> {
-    try {
-      return await this.repository.getCarsOnSale();
-    } catch (error) {
-      return [];
-    }
-  }
+
   async getCarMakes(): Promise<string[]> {
     try {
       return await this.repository.getCarMakes();

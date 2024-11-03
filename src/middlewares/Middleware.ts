@@ -11,6 +11,15 @@ export class Middleware {
   constructor(@inject(INTERFACE_TYPE.Token) token: IToken) {
     this.token = token;
   }
+
+  authenticateUser(req: Request, res: Response, next: NextFunction) {
+    const accessToken = req.cookies?.accessToken;
+
+    if (!accessToken) return next();
+    const user = this.token.verify(accessToken);
+    req.user = user;
+    next();
+  }
   isAdmin(req: Request, res: Response, next: NextFunction) {
     try {
       const accessToken = req.cookies?.accessToken;
@@ -27,7 +36,7 @@ export class Middleware {
       const id = parseInt(req.params.userId);
       const accessToken = req.cookies?.accessToken;
       if (!accessToken) throw Error;
-      const user = this.token.verify(accessToken);
+      const user = req.user;
       if (!(user?.id === id)) throw createError(401, "Unauthorized");
       next();
     } catch (e: any) {

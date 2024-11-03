@@ -30,8 +30,8 @@ export class Token implements IToken {
     }
   }
   sign(data: any): { accessToken: string; refreshToken: string } {
-    const accessToken = jwt.sign(data, accessTokenKey, { expiresIn: "1h", algorithm: "RS256" });
-    const refreshToken = jwt.sign(data, refreshTokenKey, { expiresIn: "7d", algorithm: "RS256" });
+    const accessToken = jwt.sign(data, accessTokenKey, { expiresIn: "365d", algorithm: "RS256" });
+    const refreshToken = jwt.sign(data, refreshTokenKey, { expiresIn: "365d", algorithm: "RS256" });
     return { accessToken: accessToken, refreshToken: refreshToken };
   }
   isAdmin(accessToken: string) {

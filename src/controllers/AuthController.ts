@@ -17,9 +17,9 @@ export class AuthController {
     try {
       const userData = req.body as UserDataDTO;
       const { accessToken, refreshToken, ...data } = await this.interactor.registerUser(userData);
-      res.cookie("accessToken", accessToken, { httpOnly: true });
-      res.cookie("refreshToken", refreshToken, { httpOnly: true });
-      return res.status(200).json(data);
+      res.cookie("accessToken", accessToken, { httpOnly: true, sameSite: "strict" });
+      res.cookie("refreshToken", refreshToken, { httpOnly: true, sameSite: "strict" });
+      return res.status(201).json(data);
     } catch (error) {
       next(error);
     }
@@ -27,12 +27,12 @@ export class AuthController {
   async onAuthenticateUser(req: Request, res: Response, next: NextFunction) {
     try {
       const { email, plainTextPassword } = req.body as RequestAuthDTO;
-      if (!email || !plainTextPassword) return res.send(400);
+      if (!email || !plainTextPassword) return res.sendStatus(400);
       const authenticateUser = await this.interactor.authenticateUser(email, plainTextPassword);
       if (!authenticateUser) return;
       const { accessToken, refreshToken, ...data } = authenticateUser;
-      res.cookie("accessToken", accessToken);
-      res.cookie("refreshToken", refreshToken);
+      res.cookie("accessToken", accessToken, { httpOnly: true, sameSite: "strict" });
+      res.cookie("refreshToken", refreshToken, { httpOnly: true, sameSite: "strict" });
       return res.status(200).json(data);
     } catch (error) {
       next(error);
@@ -43,7 +43,7 @@ export class AuthController {
     try {
       const refreshToken = req.cookies.refreshToken;
       const accessToken = this.interactor.refreshToken(refreshToken);
-      return res.cookie("accessToken", accessToken, { httpOnly: true }).sendStatus(200);
+      return res.cookie("accessToken", accessToken, { httpOnly: true, sameSite: "strict" }).sendStatus(200);
     } catch (error) {
       next(error);
     }

@@ -1,0 +1,25 @@
+version: "3"
+
+services:
+  backend:
+    image: "aliadam7/ecars:v1"
+    ports:
+      - "80:80"
+    env_file:
+      - .env # Load variables from .env file
+
+    depends_on:
+      - postgres
+    networks:
+      - app-network
+
+  postgres:
+    image: "postgres:latest"
+    ports:
+      - "5432:5432"
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge

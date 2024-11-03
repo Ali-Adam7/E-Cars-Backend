@@ -21,6 +21,7 @@ import { CartPrismaRepository } from "./repositories/CartPrismaRepository";
 import { Crypt } from "./third-party/crypt";
 import { Token } from "./third-party/token";
 import { PurchaseCarEmitter } from "./events/PurchaseCarEmitter";
+import "reflect-metadata";
 
 export const container = new Container({ autoBindInjectable: true });
 container.options.skipBaseClassChecks = true;

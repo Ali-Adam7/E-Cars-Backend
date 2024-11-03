@@ -2,7 +2,7 @@
   "compilerOptions": {
     "target": "es6",
     "lib": ["es6"],
-    "types": ["jest", "node", "reflect-metadata"],
+    "types": ["jest", "node"],
     "module": "commonjs",
     "rootDir": "./src",
     "outDir": "./dist",
@@ -13,10 +13,10 @@
     "emitDecoratorMetadata": true,
     "allowUnreachableCode": false,
     "noUnusedLocals": true,
-
+        "typeRoots": ["./node_modules/@types", "./types"]
 
   },
-  "include": ["src/**/*", "src/modules/Cart/repositories/.ts"],
+  "include": ["src/**/*.ts", "types/**/*.ts"],
   "exclude": ["node_modules", "src/test"],
  
 

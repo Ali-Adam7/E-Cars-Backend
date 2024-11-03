@@ -13,8 +13,9 @@ const createPrismFilters = (queryFilters: CarFiltersDTO) => {
   const prismaWhereFilter = {
     ...(queryFilters.make && { make: { in: queryFilters.make } }),
     ...(queryFilters.type && { type: { in: queryFilters.type } }),
+    ...(queryFilters.yearlt && queryFilters.yeargt && { year: { lte: queryFilters.yearlt, gte: queryFilters.yeargt } }),
   };
-  return { ...queryFilters, prismaWhereFilter, sort: queryFilters.sort, page: queryFilters.page };
+  return { ...queryFilters, prismaWhereFilter };
 };
 @injectable()
 export class CarPrismaRepository implements ICarRepository {
@@ -27,26 +28,27 @@ export class CarPrismaRepository implements ICarRepository {
   }
   async getCarById(id: number): Promise<Car> {
     try {
-      const car = await prisma.car.findUnique({ where: { id }, include: { reviews: true } });
+      const car = await prisma.car.findUnique({
+        where: { id },
+        include: {
+          reviews: {
+            include: {
+              user: { select: { name: true } },
+            },
+          },
+        },
+      });
       if (!car) throw createError(404, "Car not found");
       return car;
     } catch (e) {
       throw e;
     }
   }
-  async getFilteredCars(filters: CarFiltersDTO): Promise<{ cars: Car[]; numberOfPages: number }> {
+  async getFilteredCars(filters: CarFiltersDTO): Promise<Car[]> {
     try {
-      const { prismaWhereFilter, sort, page } = createPrismFilters(filters);
-      const cars = await prisma.car.findMany({
-        where: prismaWhereFilter,
-        take: 3,
-        skip: page * 3,
-        orderBy: sort,
-      });
-      const count = await prisma.car.count({
-        where: prismaWhereFilter,
-      });
-      return { cars: cars, numberOfPages: count / 3 };
+      const { prismaWhereFilter } = createPrismFilters(filters);
+      const cars = await prisma.car.findMany({ where: prismaWhereFilter });
+      return cars;
     } catch (e) {
       throw e;
     }
@@ -88,13 +90,7 @@ export class CarPrismaRepository implements ICarRepository {
       throw e;
     }
   }
-  async getCarsOnSale(): Promise<Car[]> {
-    try {
-      return await prisma.car.findMany({ where: { deal: true } });
-    } catch (e) {
-      throw e;
-    }
-  }
+
   async getCarMakes(): Promise<string[]> {
     try {
       const makes = await prisma.car.findMany({
