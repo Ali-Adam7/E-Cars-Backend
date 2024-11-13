@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "npx tsc && cp -r src/keys dist/",
-    "start": "pm2 start dist/server.js --attach",
+    "start": "node dist/server.js",
     "dev": "nodemon",
     "test": "NODE_ENV=TEST npm run migrate && jest --runInBand",
     "prisma": "prisma generate --schema=src/third-party/prisma/schema.prisma",

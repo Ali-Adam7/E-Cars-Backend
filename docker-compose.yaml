@@ -5,9 +5,8 @@ services:
     image: "aliadam7/ecars:v1"
     ports:
       - "80:80"
-    env_file:
-      - .env # Load variables from .env file
-
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
     depends_on:
       - postgres
     networks:
@@ -15,6 +14,10 @@ services:
 
   postgres:
     image: "postgres:latest"
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER} 
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}  # Set from environment variables or .env file
+      POSTGRES_DB: ${POSTGRES_DB}  # The name of the database to create
     ports:
       - "5432:5432"
     networks:
